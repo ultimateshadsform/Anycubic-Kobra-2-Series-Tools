@@ -12,6 +12,8 @@ This repository contains tools for the Anycubic Kobra 2 Series 3D printers.
 6. Replace the `swupdate_public.pem` in the printer with the one in the `RESOURCES` directory or create your own.
 7. Upload the firmware files to the printer as usual.
 
+Default password for the firmware is `toor` but it can be changed in the `shadow` file.
+
 ### Notes
 
 This repository is a work in progress and may contain bugs or may not work as expected any pull requests are welcome.
