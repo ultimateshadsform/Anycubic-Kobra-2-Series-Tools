@@ -14,6 +14,8 @@ This repository contains tools for the Anycubic Kobra 2 Series 3D printers.
 
 Default password for the firmware is `toor` but it can be changed in the `shadow` file.
 
+OPKG is included.
+
 ### Notes
 
 This repository is a work in progress and may contain bugs or may not work as expected any pull requests are welcome.
