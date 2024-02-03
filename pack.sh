@@ -70,6 +70,6 @@ cd ..
 echo ""
 echo "SUCCESS: Use the file update/update.swu to do USB update"
 echo ""
-echo "DONE!"
+echo "Packing DONE!"
 
 exit 0
