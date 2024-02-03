@@ -1,0 +1,157 @@
+Package: terminfo
+Version: 6.4-2
+Depends: libc, libssp, librt, libpthread
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879950
+Auto-Installed: yes
+
+Package: libc
+Version: 2.27-11
+Depends: libgcc
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879943
+Auto-Installed: yes
+
+Package: locales
+Version: 2.27-9
+Depends: libc, libssp, librt, libpthread, grep
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879954
+Auto-Installed: yes
+
+Package: entware-upgrade
+Version: 1.0-1
+Depends: libc, libssp, librt, libpthread
+Status: install ok installed
+Architecture: all
+Installed-Time: 1706879957
+Auto-Installed: yes
+
+Package: opkg
+Version: 2022-02-24-d038e5b6-2
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879956
+Auto-Installed: yes
+
+Package: libpthread
+Version: 2.27-11
+Depends: libgcc
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879944
+Auto-Installed: yes
+
+Package: zoneinfo-europe
+Version: 2023c-2
+Depends: libc, libssp, librt, libpthread, zoneinfo-core
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879948
+Auto-Installed: yes
+
+Package: grep
+Version: 3.8-2
+Depends: libc, libssp, librt, libpthread, libpcre2
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879952
+Auto-Installed: yes
+Alternatives: 300:/opt/bin/egrep:/opt/libexec/egrep-gnu, 300:/opt/bin/fgrep:/opt/libexec/fgrep-gnu, 300:/opt/bin/grep:/opt/libexec/grep-gnu
+
+Package: zoneinfo-asia
+Version: 2023c-2
+Depends: libc, libssp, librt, libpthread, zoneinfo-core
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879948
+Auto-Installed: yes
+
+Package: dropbear
+Version: 2022.82-5
+Depends: libc, libssp, librt, libpthread
+Status: install user installed
+Architecture: armv7-3.2
+Conffiles:
+ /opt/etc/config/dropbear.conf bd0c33c1188a41940ce0fd422992ede0a13b4000ca2c8a4950626ba848f35524
+Installed-Time: 1706880047
+Alternatives: 100:/opt/bin/scp:/opt/sbin/dropbear, 100:/opt/bin/ssh:/opt/sbin/dropbear
+
+Package: libpcre2
+Version: 10.42-1
+Depends: libc, libssp, librt, libpthread
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879951
+Auto-Installed: yes
+
+Package: zoneinfo-core
+Version: 2023c-2
+Depends: libc, libssp, librt, libpthread
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879947
+Auto-Installed: yes
+
+Package: libstdcpp
+Version: 8.4.0-11
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879946
+Auto-Installed: yes
+
+Package: libgcc
+Version: 8.4.0-11
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879940
+Auto-Installed: yes
+
+Package: librt
+Version: 2.27-11
+Depends: libpthread
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879945
+Auto-Installed: yes
+
+Package: entware-release
+Version: 1.0-2
+Depends: libc, libssp, librt, libpthread
+Status: install ok installed
+Architecture: all
+Installed-Time: 1706879947
+Auto-Installed: yes
+
+Package: findutils
+Version: 4.9.0-1a
+Depends: libc, libssp, librt, libpthread
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879949
+Auto-Installed: yes
+Alternatives: 300:/opt/bin/find:/opt/libexec/find-gnu, 300:/opt/bin/xargs:/opt/libexec/xargs-gnu
+
+Package: libssp
+Version: 8.4.0-11
+Status: install ok installed
+Architecture: armv7-3.2
+Installed-Time: 1706879944
+Auto-Installed: yes
+
+Package: entware-opt
+Version: 227000-3
+Depends: libc, libssp, librt, libpthread, libgcc, libstdcpp, libpthread, librt, entware-release, zoneinfo-asia, zoneinfo-europe, findutils, terminfo, locales, opkg, entware-upgrade
+Conflicts: opt-ndmsv2
+Status: install user installed
+Architecture: all
+Conffiles:
+ /opt/etc/group.1 d0e5f0d86ff4c7027efd7bf0196c95a73e6b4407d6870ed36f969ff75d633d88
+ /opt/etc/passwd.1 e26f51b6cf450fed85cf6179e323e894ea413ccf913c8c9d3a230fd520e4ab19
+ /opt/etc/profile f3273b58a3f62d1a4216c2fab30c36f17b16fc97324119a62cf2ba68f3c75ffb
+ /opt/etc/shells.1 126b0362dce578a66ffe803a04e15dec74a854dd0786dcb004b5789fdde8781d
+Installed-Time: 1706879957
+

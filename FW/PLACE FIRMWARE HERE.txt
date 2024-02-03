@@ -1,0 +1,1 @@
+Place .bin firmwares in the FW directory.

@@ -1,0 +1,58 @@
+#!/bin/sh
+
+PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
+
+PIDFILE="/opt/var/run/dropbear.pid"
+DROPBEAR="/opt/sbin/dropbear"
+
+. /opt/etc/config/dropbear.conf
+
+dropbear_status ()
+{
+	[ -f $PIDFILE ] && [ -d /proc/`cat $PIDFILE` ]
+}
+
+start()
+{
+	$DROPBEAR -p $PORT -P $PIDFILE
+}
+
+stop()
+{
+	kill `cat $PIDFILE`
+}
+case "$1" in
+	start)
+		if dropbear_status
+		then
+			echo dropbear already running
+		else
+			start
+		fi
+		;;
+	stop)
+		if dropbear_status
+		then
+			stop
+		else
+			echo dropbear is not running
+		fi
+		;;
+	status)
+		if dropbear_status
+		then
+			echo dropbear already running
+		else
+			echo dropbear is not running
+		fi
+		;;
+
+	restart)
+		stop
+		sleep 3
+		start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		;;
+esac
