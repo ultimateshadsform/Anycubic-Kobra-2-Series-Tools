@@ -15,6 +15,8 @@ This repository is a work in progress and may contain bugs or may not work as ex
 
 ### Information
 
+Default password for the firmware is `toor` but it can be changed in the `shadow` file.
+
 **FW** - Place `.bin` firmware files here.
 
 **RESOURCES** - Contains resources for the firmware files.
