@@ -78,7 +78,9 @@ With the xfel tool:
 2. Enter the following:
 
 xfel ddr t113-s3
+
 xfel write 0x43000000 uboot239.bin
+
 xfel exec 0x43000b50
 
 Press and hold key 's' until the boot process stop in uboot shell and go to step 3 above
