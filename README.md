@@ -6,6 +6,7 @@ This repository contains tools for the Anycubic Kobra 2 Series 3D printers.
 
 Documentation can be found in the `docs` directory.
 
+- [PRINTER_CFG.md](docs/PRINTER_CFG.md) - Printer.cfg things.
 - [EMMC_BACKUP.md](docs/EMMC_BACKUP.md) - How to backup the EMMC.
 - [ENTER_FEL_MODE.md](docs/ENTER_FEL_MODE.md) - How to enter FEL mode.
 - [DOWNLOAD_SDK.md](docs/DOWNLOAD_SDK.md) - How to download the SDK.
