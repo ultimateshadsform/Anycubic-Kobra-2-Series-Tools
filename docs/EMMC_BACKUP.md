@@ -1,7 +1,7 @@
 # EMMC Backup Procedure
 
 1. Use app version 2.39 and stop the booting process by holding key 's'
-2. Insert USB disk with the file backup.scr on it
+2. Insert USB disk with the file [backup.scr](../extra-stuff/emmc/backup.scr) on it
 3. From the uboot shell enter the following:
 
 ```sh
