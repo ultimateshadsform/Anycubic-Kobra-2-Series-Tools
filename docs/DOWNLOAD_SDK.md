@@ -14,8 +14,4 @@ https://whycan.com/t_8303.html
 
 https://bbs.aw-ol.com/category/7/%E5%85%B6%E5%AE%83%E5%85%A8%E5%BF%97%E8%8A%AF%E7%89%87%E8%AE%A8%E8%AE%BA%E5%8C%BA?_x_tr_hist=true
 
-https://d1.docs.aw-ol.com/study/study_3getsdktoc/#sdk_3
-
 https://bbs.aw-ol.com/topic/1034
-
-https://gitlab.com/weidongshan/tina-d1-h
