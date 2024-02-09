@@ -48,6 +48,12 @@ EMMC Backup Procedure
 usb reset
 usb dev 0
 fatload usb 0:0 42000000 backup.scr
+
+If you see an error, try typing in usb part and see what partitions are available. Then enter:
+fatload usb 0:<Enter partition number in here> 42000000 backup.scr
+Example: fatload usb 0:1 42000000 backup.scr
+(Partition 1)
+
 source 42000000
 
 4. Remove the USB disk and insert at least 8GB USB disk
