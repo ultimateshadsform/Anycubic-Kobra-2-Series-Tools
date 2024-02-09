@@ -73,6 +73,23 @@ else
   /bin/cp -rf RESOURCES/OPTIONS/ssh/* unpacked/squashfs-root
 fi
 
+# boot resource
+
+# If files exist in RESOURCES/OPTIONS/boot_resource, copy them to the boot partition. Open it with: mount -t vfat file folder
+
+# If files exists inside the folder RESOURCES/OPTIONS/boot_resource, copy them to the boot partition
+if [ "$(ls -A RESOURCES/OPTIONS/boot_resource)" ]; then
+  # copy the files to the boot partition: Mount it first: mount -t vfat unpacked/boot-resource ./temp
+  sudo mount -t vfat unpacked/boot-resource ./temp
+  sudo /bin/cp -rf RESOURCES/OPTIONS/boot_resource/* ./temp
+  sudo umount ./temp
+fi
+
+# If files exists inside the folder RESOURCES/OPTIONS/app_images, copy them to unpacked/squashfs-root/app/resources/images
+if [ "$(ls -A RESOURCES/OPTIONS/app_images)" ]; then
+  /bin/cp -rf RESOURCES/OPTIONS/app_images/* unpacked/squashfs-root/app/resources/images
+fi
+
 echo "DONE! THE STANDARD OPTIONS ARE IMPLEMENTED. IF NEEDED, ADD MORE OPTIONS MANUALLY."
 
 exit 0
