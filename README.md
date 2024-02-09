@@ -13,6 +13,8 @@ Documentation can be found in the `docs` directory.
 - [OLD_INFO.md](docs/OLD_INFO.md) - Old information.
 - [CREDITS.md](docs/CREDITS.md) - Credits.
 
+This [flashforge](https://github.com/FlashforgeOfficial/AD5M_Series_Klipper) is similar to the Anycubic Kobra 2 Series. So we need to investigate it.
+
 ### Usage
 
 1. Clone the repository.
