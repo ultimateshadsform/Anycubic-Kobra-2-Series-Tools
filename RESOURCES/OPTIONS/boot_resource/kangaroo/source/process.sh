@@ -27,10 +27,13 @@ cp boot-resource-src boot-resource
 chmod 664 boot-resource
 
 # replace all images in the copy of the source
-mount -t vfat boot-resource ./temp
-/bin/cp -f ./*.bmp ./temp
-umount ./temp
-rm -rf temp
+mount -t vfat boot-resource "$PWD/temp" -o rw
+/bin/cp -f *.bmp "$PWD/temp"
+sync
+sync
+sync
+umount "$PWD/temp"
+rm -rf "$PWD/temp"
 
 # setup the result boot-resource
 rm -f ../boot-resource
