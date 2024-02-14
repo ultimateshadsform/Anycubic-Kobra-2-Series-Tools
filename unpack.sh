@@ -2,9 +2,10 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
-# chech the number of arguments
+# check the number of arguments
 if (($# != 1)); then
   echo "Usage: ./unpack.sh update_file"
   echo "Example: ./unpack.sh FW/AC104_K2Pro_1.1.0_3.0.5_update.bin"
@@ -22,7 +23,7 @@ if [ ! -f "$UPDATE_FILE" ]; then
 fi
 
 # check the input file ext
-if [ "$UPDATE_FILE_EXT" != "bin" ] && [ "$UPDATE_FILE_EXT" != "swu" ]; then
+if [ "$UPDATE_FILE_EXT" != "bin" ] && [ "$UPDATE_FILE_EXT" != "swu" ] && [ "$UPDATE_FILE_EXT" != "zip" ]; then
   echo -e "${RED}ERROR: Unknown file extension '${UPDATE_FILE_EXT}'${NC}"
   exit 2
 fi
@@ -67,9 +68,18 @@ if [ "$UPDATE_FILE_EXT" == "bin" ]; then
   rm -r update.zip
   cd ..
 else
-  # prepare a copy of the file
-  mkdir ./unpacked/update
-  cp "$UPDATE_FILE" ./unpacked/update/update.swu
+  if [ "$UPDATE_FILE_EXT" == "zip" ]; then
+    # zip file
+    cp "$UPDATE_FILE" ./unpacked/update.zip
+    cd unpacked || exit 5
+    unzip update.zip
+    rm -r update.zip
+    cd ..
+  else
+    # swu file, prepare a copy of the file
+    mkdir ./unpacked/update
+    cp "$UPDATE_FILE" ./unpacked/update/update.swu
+  fi
 fi
 
 # check the input file
@@ -97,6 +107,8 @@ unsquashfs rootfs
 
 cd ..
 
-echo "Unpacking DONE! Check the 'unpacked' folder for the result."
+echo ""
+echo -e "${GREEN}Unpacking DONE! Check the 'unpacked' folder for the result.${NC}"
+echo ""
 
 exit 0

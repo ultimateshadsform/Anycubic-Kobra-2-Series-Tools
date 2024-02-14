@@ -1,5 +1,0 @@
-/opt/sbin/dropbear
-/opt/bin/dropbearkey
-/opt/etc/config/dropbear.conf
-/opt/etc/init.d/S51dropbear
-/opt/bin/dbclient

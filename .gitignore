@@ -1,4 +1,5 @@
 update/*.swu
 FW/*.bin
 FW/*.swu
+FW/*.zip
 unpacked/*

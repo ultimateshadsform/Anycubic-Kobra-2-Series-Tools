@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # files needed
@@ -42,10 +43,15 @@ done
 # update sw-description
 rm -f cpio_item_md5
 for i in $FILES; do
-  if [ "$i" != "cpio_item_md5" ] && [ "$i" != "sw-description" ]; then
+  if [ "$i" != "cpio_item_md5" ] && [ "$i" != "sw-description" ] && [ "$i" != "sw-description.sig" ]; then
     hash_new=$(sha256sum "$i" | awk '{print $1}')
     hash_old=$(awk -F= 'BEGIN{v=""} $1~"filename"{v=$2} $1~"sha256"{gsub(/"| |;/,"",v); gsub(/"| |;/,"",$2); print v " " $2}' sw-description | grep "$i" | head -1 | awk '{print $2}')
-    sed -i -e "s/$hash_old/$hash_new/g" sw-description
+    if [ -n "$hash_old" ]; then
+      sed -i -e "s/$hash_old/$hash_new/g" sw-description
+    else
+      echo -e "${RED}ERROR: Cannot find the hash for: '$i' ${NC}"
+      exit 4
+    fi
   fi
 done
 
@@ -68,8 +74,7 @@ for i in $FILES; do echo "$i"; done | cpio -ov -H crc >../update/update.swu
 cd ..
 
 echo ""
-echo "SUCCESS: Use the file update/update.swu to do USB update"
+echo -e "${GREEN}Packing done: Use the file update/update.swu to do USB update${NC}"
 echo ""
-echo "Packing DONE!"
 
 exit 0

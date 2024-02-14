@@ -9,6 +9,7 @@ Documentation can be found in the `docs` directory.
 - [COMMANDS.md](docs/COMMANDS.md) - Useful commands.
 - [PRINTER_CFG.md](docs/PRINTER_CFG.md) - Printer.cfg things.
 - [EMMC_BACKUP.md](docs/EMMC_BACKUP.md) - How to backup the EMMC.
+- [EMMC_RESTORE.md](docs/EMMC_RESTORE.md) - How to restore the EMMC.
 - [ENTER_FEL_MODE.md](docs/ENTER_FEL_MODE.md) - How to enter FEL mode.
 - [DOWNLOAD_SDK.md](docs/DOWNLOAD_SDK.md) - How to download the SDK.
 - [OLD_INFO.md](docs/OLD_INFO.md) - Old information.
@@ -19,16 +20,16 @@ This [flashforge](https://github.com/FlashforgeOfficial/AD5M_Series_Klipper) is 
 ### Usage
 
 1. Clone the repository.
-2. Place `.bin` firmware files in the `FW` directory.
-3. Run `unpack.sh` to unpack the firmware files.
-4. Modify the firmware files as needed and run `patch.sh` to patch the firmware files.
-5. Run `pack.sh` to pack the firmware files.
-6. Replace the `swupdate_public.pem` in the printer with the one in the `RESOURCES` directory or create your own.
-7. Upload the firmware files to the printer as usual. Can be found in the `update` directory.
+2. Place `.bin`, `.zip` or `.swu` firmware files in the `FW` directory.
+   If you don't have them, you can use the script `fwdl.sh <model> <version>` to download in the folder `FW` the version for the printer model you need. The supported models are `K2Pro`, `K2Plus` and `K2Max`. The version is given in the format `X.Y.Z` like `3.0.9`.
+3. Run `unpack.sh <update_file>` to unpack the selected firmware update file. The supported file extensions are `bin`, `zip` and `swu`. The result is in the folder `unpacked`.
+4. Modify the options file `options.cfg` to select the options you need and run `patch.sh` to patch the firmware file. The result is still in the folder `unpacked`. You may manually modify the current state of the files if needed. You can also prepare different configuration files for differents needs based on the default file `options.cfg`. The custom configuration file is provided as parameter: `patch.sh <custom_configuration_file>`. If no parameter is provided, the file `options.cfg` will be used.
+5. Run `pack.sh` to pack the firmware files from the folder `unpached`. The result is the file `update/update.swu`.
+6. If your printer is still with the original firmware, you have to make root access first. Then replace the `/etc/swupdate_public.pem` in the printer with the one in the `RESOURCES` directory or create your own (make a copy first of the original `/etc/swupdate_public.pem` key in case you want to return to the original `ota` updates). Then aply the newly generated custom software `update/update.swu` by USB update (place the file `update.swu` in the folder `update` on the root of a FAT/FAT32 formated USB disk). If your printer already has custom update installed, then you can directly aply the new update by USB update.
 
-Default password for the firmware is `toor` but it can be changed in the `shadow` file.
+Default password for the root access (UART and SSH) is `toor` but it can be changed in the `options.cfg` file.
 
-OPKG is included.
+OPKG will be included with the option `ssh` if it is enabled.
 
 ### Notes
 
@@ -36,11 +37,9 @@ This repository is a work in progress and may contain bugs or may not work as ex
 
 ### Information
 
-Default password for the firmware is `toor` but it can be changed in the `shadow` file.
+**FW** - Place `.bin`, `.zip` or `.swu` firmware files here.
 
-**FW** - Place `.bin` firmware files here.
-
-**RESOURCES** - Contains resources for the firmware files.
+**RESOURCES** - Contains resources for the firmware options.
 
 **TOOLS** - Contains tools to decrypt and encrypt firmware files and more.
 

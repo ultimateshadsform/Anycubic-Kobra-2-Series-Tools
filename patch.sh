@@ -1,95 +1,70 @@
 #!/bin/bash
 
+# the default options file
+optionsfile="options.cfg"
+
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
+project_root="$PWD"
 
-# check the input folder
-if [ ! -d "./unpacked/squashfs-root" ]; then
-  echo -e "${RED}ERROR: Cannot find the input folder './unpacked/squashfs-root' ${NC}"
-  exit 2
+# check the parameters for a custom options file
+if [ $# == 1 ]; then
+  optionsfile="$1"
+  if [ ! -f "$optionsfile" ]; then
+    optionsfile="${optionsfile}.cfg"
+  fi
 fi
 
-# check the input folder
-if [ ! -d "RESOURCES/KEYS" ]; then
-  echo -e "${RED}ERROR: Cannot find the input folder 'RESOURCES/KEYS' ${NC}"
-  exit 3
+# check the options file
+if [ ! -f "$optionsfile" ]; then
+  echo -e "${RED}ERROR: Cannot find the '$optionsfile' file ${NC}"
+  exit 1
 fi
 
-# check the input folder
-if [ ! -d "RESOURCES/OPTIONS" ]; then
-  echo -e "${RED}ERROR: Cannot find the input folder 'RESOURCES/OPTIONS' ${NC}"
-  exit 4
-fi
+# check the required tools
+TOOL_LIST=("awk")
+i=0
+part_num=${#TOOL_LIST[*]}
+while [ $i -lt $((part_num)) ]; do
+  echo "Checking tool: ${TOOL_LIST[$i]}"
+  t=$(which "${TOOL_LIST[$i]}")
+  if [ -z "$t" ]; then
+    if [ ! -f "TOOLS/${TOOL_LIST[$i]}" ]; then
+      echo -e "${RED}ERROR: Missing tool '${TOOL_LIST[$i]}' ${NC}"
+      exit 2
+    fi
+  fi
+  i=$(($i + 1))
+done
 
-# check the private key file
-if [ ! -f "RESOURCES/KEYS/swupdate_private.pem" ]; then
-  echo -e "${RED}ERROR: Cannot find the input file 'RESOURCES/KEYS/swupdate_private.pem' ${NC}"
-  echo -e "Use 'openssl genrsa -out swupdate_private.pem' to generate a private key"
-  echo -e "Use 'openssl rsa -in swupdate_private.pem -out swupdate_public.pem -outform PEM -pubout' to export the public key"
-  exit 5
-fi
+# parse the enabled options that have a set value
+options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! ($2 == "")) print $1}' "$optionsfile")
 
-# check the public key file
-if [ ! -f "RESOURCES/KEYS/swupdate_public.pem" ]; then
-  echo -e "${RED}ERROR: Cannot find the input file 'RESOURCES/KEYS/swupdate_public.pem' ${NC}"
-  echo -e "Use 'openssl rsa -in swupdate_private.pem -out swupdate_public.pem -outform PEM -pubout' to export the public key"
-  exit 6
-fi
+# execute the enabled options
+for option in $options; do
+  echo "Processing option '$option' ..."
+  # parse the parameters
+  parameters=$(awk -F '=' "{if (! (\$1 == \"\") && ! (\$2 == \"\") && (\$1 ~ /$option/ ) ) print \$2}" "$optionsfile")
+  # replace the project root requests
+  parameters="${parameters/@/"$project_root"}"
+  # execute the script
+  opt_script="${project_root}/RESOURCES/OPTIONS/${option}/${option}.sh"
+  if [ ! -f "$opt_script" ]; then
+    echo -e "${RED}ERROR: Cannot find the file '$opt_script' ${NC}"
+    exit 3
+  fi
+  "$opt_script" "$project_root" "$parameters"
+  if [ $? -ne 0 ]; then
+    # errors found, exit
+    echo "Errors found! The patching has been canceled."
+    exit 4
+  fi
+done
 
-# enable the UART
-if [ ! -f "RESOURCES/OPTIONS/uart/uboot" ]; then
-  echo -e "${RED}ERROR: Cannot find the input file 'RESOURCES/OPTIONS/uart/uboot' ${NC}"
-  echo -e "Use the file uboot from version 2.3.9"
-  exit 7
-else
-  /bin/cp -rf RESOURCES/OPTIONS/uart/* unpacked
-fi
-
-# enable root access
-if [ ! -d "RESOURCES/OPTIONS/root_access" ]; then
-  echo -e "${RED}ERROR: Cannot find the input folder 'RESOURCES/OPTIONS/root_access' ${NC}"
-  echo -e "Use the file 'unpacked/squashfs-root/etc/shadow' and set a known root password hash"
-  echo -e "Then placed the modified file in 'RESOURCES/OPTIONS/root_access/etc/shadow'"
-  exit 8
-else
-  /bin/cp -rf RESOURCES/OPTIONS/root_access/* unpacked/squashfs-root
-fi
-
-# enable custom updates
-if [ ! -d "RESOURCES/OPTIONS/custom_update" ]; then
-  echo -e "${RED}ERROR: Cannot find the input folder 'RESOURCES/OPTIONS/custom_update' ${NC}"
-  echo -e "Place the file 'RESOURCES/KEYS/swupdate_public.pem' in the folder 'RESOURCES/OPTIONS/custom_update/etc/'"
-  exit 9
-else
-  /bin/cp -rf RESOURCES/OPTIONS/custom_update/* unpacked/squashfs-root
-fi
-
-# enable ssh
-if [ ! -d "RESOURCES/OPTIONS/ssh" ]; then
-  echo -e "${RED}ERROR: Cannot find the input folder 'RESOURCES/OPTIONS/ssh' ${NC}"
-  exit 9
-else
-  /bin/cp -rf RESOURCES/OPTIONS/ssh/* unpacked/squashfs-root
-fi
-
-# boot resource
-
-# If files exist in RESOURCES/OPTIONS/boot_resource, copy them to the boot partition. Open it with: mount -t vfat file folder
-
-# If files exists inside the folder RESOURCES/OPTIONS/boot_resource, copy them to the boot partition
-if [ "$(ls -A RESOURCES/OPTIONS/boot_resource)" ]; then
-  # copy the files to the boot partition: Mount it first: mount -t vfat unpacked/boot-resource ./temp
-  sudo mount -t vfat unpacked/boot-resource ./temp
-  sudo /bin/cp -rf RESOURCES/OPTIONS/boot_resource/* ./temp
-  sudo umount ./temp
-fi
-
-# If files exists inside the folder RESOURCES/OPTIONS/app_images, copy them to unpacked/squashfs-root/app/resources/images
-if [ "$(ls -A RESOURCES/OPTIONS/app_images)" ]; then
-  /bin/cp -rf RESOURCES/OPTIONS/app_images/* unpacked/squashfs-root/app/resources/images
-fi
-
-echo "DONE! THE STANDARD OPTIONS ARE IMPLEMENTED. IF NEEDED, ADD MORE OPTIONS MANUALLY."
+echo ""
+echo -e "${GREEN}DONE! THE SELECTED OPTIONS ARE IMPLEMENTED. IF NEEDED, ADD MORE OPTIONS MANUALLY.${NC}"
+echo ""
 
 exit 0
