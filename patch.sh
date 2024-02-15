@@ -45,8 +45,10 @@ options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! 
 # execute the enabled options
 for option in $options; do
   echo "Processing option '$option' ..."
-  # parse the parameters
-  parameters=$(awk -F '=' "{if (! (\$1 == \"\") && ! (\$2 == \"\") && (\$1 ~ /$option/ ) ) print \$2}" "$optionsfile")
+  # parse the parameters (only from the first found option)
+  # duplicated options are not supported, if needed use more parameters for the same listed option:
+  # startup_script="script1.sh" "script2.sh" "script3.sh"
+  parameters=$(awk -F '=' "{if (! (substr(\$0,1,1) == \"#\") && ! (substr(\$0,1,1) == \";\") && ! (\$1 == \"\") && ! (\$2 == \"\") && (\$1 ~ /$option/ ) ) print \$2}" "$optionsfile" | head -n 1)
   # replace the project root requests
   parameters="${parameters/@/"$project_root"}"
   # execute the script
