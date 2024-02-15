@@ -43,7 +43,7 @@ if [ ! -d "$ssh_package_folder" ]; then
 fi
 
 # check the ssh package file
-ssh_package_file="${ssh_package_folder}/${ssh_package}.zip"
+ssh_package_file="${ssh_package_folder}/ssh.zip"
 if [ ! -f "$ssh_package_file" ]; then
   echo -e "${RED}ERROR: Cannot find the file '$ssh_package_file' ${NC}"
   exit 5
@@ -60,6 +60,14 @@ fi
 current_folder="$PWD"
 cd "$target_folder" || exit 7
 unzip -o "$ssh_package_file"
+# add "/opt/etc/init.d/rc.unslung start" to $project_root/unpacked/squashfs-root/etc/rc.local before the exit 0 line
+result=$(grep "/opt/etc/init.d/rc.unslung start" "$project_root/unpacked/squashfs-root/etc/rc.local")
+if [ -z "$result" ]; then
+  # add it only if not already done
+  sed -i '/exit 0/i /opt/etc/init.d/rc.unslung start' "$project_root/unpacked/squashfs-root/etc/rc.local"
+fi
+# extend the PATH to $project_root/unpacked/squashfs-root/etc/profile
+sed -i 's#export PATH="/usr/sbin:/usr/bin:/sbin:/bin"#export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"#' "$project_root/unpacked/squashfs-root/etc/profile"
 cd "$current_folder" || exit 8
 
 exit 0
