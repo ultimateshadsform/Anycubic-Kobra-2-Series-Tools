@@ -75,6 +75,20 @@ cd ..
 
 echo ""
 echo -e "${GREEN}Packing done: Use the file update/update.swu to do USB update${NC}"
+# Check if md5sum is available
+if [ -z "$(which md5sum)" ]; then
+  echo -e "${RED}ERROR: Cannot find the tool 'md5sum' You will need to calculate the md5sum manually${NC}"
+  exit 0
+else
+  echo -e "md5sum: $(md5sum update/update.swu)"
+fi
 echo ""
+
+# Ask if the user wants to attempt to auto install the update. If yes then run the auto install script
+read -r -p "Do you want to attempt to auto install the update? [y/N] " response
+if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+  # Run TOOLS/auto_install.py
+  python3 TOOLS/auto_install.py
+fi
 
 exit 0

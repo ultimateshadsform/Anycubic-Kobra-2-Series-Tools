@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+
+# Import ssh
+from scp import SCPClient
+import paramiko
+import os
+import sys
+import getpass
+
+# Create hostname, username, ip struct to save
+
+class PrinterSettings:
+    def __init__(self, hostname, username, ip, port):
+        self.hostname = hostname
+        self.username = username
+        self.ip = ip
+        self.port = port
+
+    def save_config(self):
+        with open('auto_install.cfg', 'w') as file:
+            file.write(f'{self.hostname},{self.username},{self.ip},{self.port}')
+
+    def load_config(self):
+        with open('auto_install.cfg', 'r') as file:
+            data = file.read().split(',')
+            self.hostname = data[0]
+            self.username = data[1]
+            self.ip = data[2]
+            self.port = data[3]
+
+def handle_progress(filename: bytes, size: int, sent: int):
+    print(f'{filename.decode("utf-8")}: {sent/size*100:.2f}%')
+
+if __name__ == "__main__":
+    # Check if update/update.swu exists
+    if not os.path.exists('update/update.swu'):
+        print('update/update.swu not found')
+        sys.exit(1)
+
+    # Connect to the printer
+    
+    # Check if auto_install.cfg exists and load values else ask for input
+    if os.path.exists('auto_install.cfg'):
+        printer_settings = PrinterSettings('', '', '', '')
+        printer_settings.load_config()
+    else:
+        hostname = input('Enter the pc hostname: ')
+        username = input('Enter the username: ')
+        ip = input('Enter the ip: ')
+        port = input('Enter the port: ')
+        printer_settings = PrinterSettings(hostname, username, ip, port)
+        printer_settings.save_config()
+
+    # Connect to the printer
+    ssh = paramiko.SSHClient()
+    ssh.load_system_host_keys()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(printer_settings.ip, port=printer_settings.port, username=printer_settings.username, password=getpass.getpass())
+
+    print('Connected to the printer')
+
+    print('Creating /mnt/exUDISK/update')
+    # Create /mnt/exUDISK if it doesn't exist
+    ssh.exec_command('mkdir -p /mnt/exUDISK/update')
+
+    print('Copying update/update.swu to /mnt/exUDISK/update/update.swu')
+
+    scp = SCPClient(ssh.get_transport(), progress=handle_progress)
+    scp.put('update/update.swu', remote_path='/mnt/exUDISK/update/update.swu', recursive=True)
+    scp.close()
+
+    # md5sum update/update.swu with /mnt/exUDISK/update.swu. If they don't match, try again 3 times
+    for i in range(3):
+        # Get md5sum of both files
+        stdin, stdout, stderr = ssh.exec_command('md5sum /mnt/exUDISK/update/update.swu')
+        md5sum_remote = stdout.read().decode('utf-8').split(' ')[0]
+        md5sum_local = os.popen('md5sum update/update.swu').read().split(' ')[0]
+
+        print(f'MD5 sum of local:  {md5sum_local}')
+        print(f'MD5 sum of remote: {md5sum_remote}')
+
+        # If they match, break and run swupdate
+        if md5sum_remote == md5sum_local:
+            print('MD5 sums match... Running swupdate')
+            # Check fw_printenv boot_partition to see if it's bootA or bootB
+            stdin, stdout, stderr = ssh.exec_command('fw_printenv boot_partition')
+            current_boot_partition = stdout.read().decode('utf-8').split('=')[1].strip()
+
+            # If current_boot_partition is bootA, run swupdate with bootB. example: now_A_next_B
+            boot_partition = "now_A_next_B" if current_boot_partition == "bootA" else "now_B_next_A"
+            ssh.exec_command(f'swupdate_cmd.sh -i /mnt/exUDISK/update/update.swu -e stable,{boot_partition} -k /etc/swupdate_public.pem')
+            print("Update started... Please wait for the printer to reboot")
+            break
+        else:
+            # Delete the file and try again
+            print(f'MD5 sums do not match... Trying again. Current attempt: {i+1}')
+            ssh.exec_command('rm /mnt/exUDISK/update.swu')
+            scp.put('update/update.swu', remote_path='/mnt/exUDISK/update/update.swu', recursive=True)
+            scp.close()
+
+
