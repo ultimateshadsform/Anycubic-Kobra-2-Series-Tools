@@ -3,6 +3,9 @@
 # the default options file
 optionsfile="options.cfg"
 
+# the result of installed options log
+installed_options="installed_options.log"
+
 # global definitions:
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -39,6 +42,9 @@ while [ $i -lt $((part_num)) ]; do
   i=$(($i + 1))
 done
 
+# remove the old result file for the installed options
+rm -f "$installed_options"
+
 # parse the enabled options that have a set value
 options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! ($2 == "")) print $1}' "$optionsfile")
 
@@ -63,17 +69,39 @@ for option in $options; do
     param=$(echo "$parameter" | sed -e 's/^"//' -e 's/"$//')
     # remove the leading and ending single quotes
     par=$(echo "$param" | sed -e 's/^'\''//' -e 's/'\''$//')
-    "$opt_script" "$project_root" "$par"
-    if [ $? -ne 0 ]; then
-      # errors found, exit
-      echo "Errors found! The patching has been canceled."
-      exit 4
+    # remove the leading and ending square brackets
+    req_option=$(echo "$par" | sed -e 's/^\[//' -e 's/\]$//')
+    if [ "$par" == "$req_option" ]; then
+      # current parameter requires processing
+      "$opt_script" "$project_root" "$par"
+      if [ $? -ne 0 ]; then
+        # errors found, exit
+        echo "Errors found! The patching has been canceled."
+        exit 4
+      fi
+      # set this option as already installed
+      echo "$opt_script" >>"$installed_options"
+    else
+      # this is an option requirement that needs validation
+      found=""
+      for opt in $options; do
+        if [ "$opt" == "$req_option" ]; then
+          found="$opt"
+          break
+        fi
+      done
+      if [ -z "$found" ]; then
+        # required option is missing or not enabled
+        echo -e "${RED}ERROR: Option '$option' requires option '$req_option' which is missing or not enabled. ${NC}"
+        exit 5
+      fi
+      echo -e "${GREEN}Option '$option' requires option '$req_option'. This requirement was successfuly validated. ${NC}"
     fi
   done
 done
 
 echo ""
-echo -e "${GREEN}DONE! THE SELECTED OPTIONS ARE IMPLEMENTED. IF NEEDED, ADD MORE OPTIONS MANUALLY.${NC}"
+echo -e "${GREEN}DONE! The selected options are successfuly processed.${NC}\nYou may do manually more changes in the 'unpacked' folder if needed."
 echo ""
 
 exit 0

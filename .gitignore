@@ -3,3 +3,4 @@ FW/*.bin
 FW/*.swu
 FW/*.zip
 unpacked/*
+installed_options.log
