@@ -42,11 +42,11 @@ done
 # parse the enabled options that have a set value
 options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! ($2 == "")) print $1}' "$optionsfile")
 
-# execute the enabled options
+# for each enabled option
 for option in $options; do
   echo "Processing option '$option' ..."
   # parse the parameters (only from the first found option)
-  # duplicated options are not supported, if needed use more parameters for the same listed option:
+  # duplicated options are not supported, if needed use list of parameters for the same option:
   # startup_script="script1.sh" "script2.sh" "script3.sh"
   parameters=$(awk -F '=' "{if (! (substr(\$0,1,1) == \"#\") && ! (substr(\$0,1,1) == \";\") && ! (\$1 == \"\") && ! (\$2 == \"\") && (\$1 ~ /$option/ ) ) print \$2}" "$optionsfile" | head -n 1)
   # replace the project root requests
@@ -57,12 +57,19 @@ for option in $options; do
     echo -e "${RED}ERROR: Cannot find the file '$opt_script' ${NC}"
     exit 3
   fi
-  "$opt_script" "$project_root" "$parameters"
-  if [ $? -ne 0 ]; then
-    # errors found, exit
-    echo "Errors found! The patching has been canceled."
-    exit 4
-  fi
+  # for each parameter in the list
+  for parameter in $parameters; do
+    # remove the leading and ending double quotes
+    param=$(echo "$parameter" | sed -e 's/^"//' -e 's/"$//')
+    # remove the leading and ending single quotes
+    par=$(echo "$param" | sed -e 's/^'\''//' -e 's/'\''$//')
+    "$opt_script" "$project_root" "$par"
+    if [ $? -ne 0 ]; then
+      # errors found, exit
+      echo "Errors found! The patching has been canceled."
+      exit 4
+    fi
+  done
 done
 
 echo ""
