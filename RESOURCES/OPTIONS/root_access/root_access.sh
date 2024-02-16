@@ -11,7 +11,7 @@ if [ $# != 2 ]; then
 fi
 
 project_root="$1"
-password_hash=$(echo "$2" | sed -e 's/^"//' -e 's/"$//')
+password_hash="$2"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then

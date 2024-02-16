@@ -11,7 +11,7 @@ if [ $# != 2 ]; then
 fi
 
 project_root="$1"
-image_set=$(echo "$2" | sed -e 's/^"//' -e 's/"$//')
+image_set="$2"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then

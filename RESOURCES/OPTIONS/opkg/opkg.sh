@@ -11,7 +11,7 @@ if [ $# != 2 ]; then
 fi
 
 project_root="$1"
-opkg_package=$(echo "$2" | sed -e 's/^"//' -e 's/"$//')
+opkg_package="$2"
 
 # check the required tools
 TOOL_LIST=("unzip")

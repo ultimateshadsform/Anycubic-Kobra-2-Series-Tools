@@ -13,7 +13,7 @@ if [ $# != 2 ]; then
 fi
 
 def_target="$1/unpacked/squashfs-root/app/app"
-def_url=$(echo "$2" | sed -e 's/^"//' -e 's/"$//')
+def_url="$2"
 
 # check the input file
 if [ ! -f "$def_target" ]; then

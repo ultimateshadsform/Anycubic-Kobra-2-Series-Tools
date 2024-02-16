@@ -11,7 +11,7 @@ if [ $# != 2 ]; then
 fi
 
 project_root="$1"
-ssh_package=$(echo "$2" | sed -e 's/^"//' -e 's/"$//')
+ssh_package="$2"
 
 # check the required tools
 TOOL_LIST=("unzip")

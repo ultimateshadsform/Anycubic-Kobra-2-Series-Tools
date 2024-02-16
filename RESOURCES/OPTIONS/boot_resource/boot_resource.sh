@@ -11,7 +11,7 @@ if [ $# != 2 ]; then
 fi
 
 project_root="$1"
-boot_resource=$(echo "$2" | sed -e 's/^"//' -e 's/"$//')
+boot_resource="$2"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then
