@@ -14,16 +14,27 @@ project_root="$1"
 webcam_package="$2"
 
 # check the required tools
-TOOL_LIST=("unzip")
+app_version_tool=$(which app_version.sh)
+app_model_tool=$(which app_model.sh)
+TOOL_LIST=("unzip" "app_version.sh" "app_model.sh")
 i=0
 part_num=${#TOOL_LIST[*]}
 while [ $i -lt $((part_num)) ]; do
-  echo "Checking tool: ${TOOL_LIST[$i]}"
-  t=$(which "${TOOL_LIST[$i]}")
-  if [ -z "$t" ]; then
-    if [ ! -f "TOOLS/${TOOL_LIST[$i]}" ]; then
-      echo -e "${RED}ERROR: Missing tool '${TOOL_LIST[$i]}' ${NC}"
+  toolname=${TOOL_LIST[$i]}
+  echo "Checking tool: $toolname"
+  tpath=$(which "$toolname")
+  if [ -z "$tpath" ]; then
+    local_tool_path="$project_root/TOOLS/$toolname"
+    if [ ! -f "$local_tool_path" ]; then
+      echo -e "${RED}ERROR: Missing tool '$toolname' ${NC}"
       exit 2
+    else
+      if [ "$toolname" == "app_version.sh" ]; then
+        app_version_tool="$local_tool_path"
+      fi
+      if [ "$toolname" == "app_model.sh" ]; then
+        app_model_tool="$local_tool_path"
+      fi
     fi
   fi
   i=$(($i + 1))
@@ -64,33 +75,22 @@ cd "$current_folder" || exit 8
 
 # try to find out the app version (like app_ver="309")
 def_target="$project_root/unpacked/squashfs-root/app/app"
-def_target_ver="${def_target}_ver"
-offset=$(grep --binary-files=text -m1 -b -o "__FILE__" "$def_target" | awk -F: '{print $1}')
-offset20=$((offset + 20))
-dd if="$def_target" of="$def_target_ver" bs=1 skip="$offset20" count=8 &>>/dev/null
-ver=$(hexdump -C "$def_target_ver" | awk '{print $10}' | head -n 1)
-rm -f "$def_target_ver"
-ver="${ver//./}"
-app_ver="${ver//|/}"
+app_ver=$("$app_version_tool" "$def_target")
+if [ $? != 0 ]; then
+  echo -e "${RED}ERROR: Cannot find the app version ${NC}"
+  exit 9
+fi
 
 # try to find out the model
-offset_max=$(grep --binary-files=text -m1 -b -o "unmodifiable_max.cfg" "$def_target" | awk -F: '{print $1}')
-offset_plus=$(grep --binary-files=text -m1 -b -o "unmodifiable_plus.cfg" "$def_target" | awk -F: '{print $1}')
-app_model="K2Pro"
-if [ -n "$offset_plus" ]; then
-  app_model="K2Plus"
+app_model=$("$app_model_tool" "$def_target")
+if [ $? != 0 ]; then
+  echo -e "${RED}ERROR: Cannot find the app model ${NC}"
+  exit 10
 fi
-if [ -n "$offset_max" ]; then
-  app_model="K2Max"
-fi
-
-echo "DETECTED PRINTER MODEL:    $app_model"
-echo "DETECTED FIRMWARE VERSION: $app_ver"
-sleep 1
 
 # patch the app based on the model and the version
 
-if [ "$app_ver" == "309" ]; then
+if [ "$app_ver" == "3.0.9" ]; then
   # stop the app for looking for inserted webcam
   sed -i 's/video4linux/videoXlinux/g' "$def_target"
   if [ "$app_model" == "K2Pro" ]; then
@@ -112,4 +112,4 @@ fi
 
 echo -e "${RED}ERROR: Unsupported model and version! It requires K2Pro/K2Plus/K2Max with version 3.0.9+ ${NC}"
 
-exit 9
+exit 11
