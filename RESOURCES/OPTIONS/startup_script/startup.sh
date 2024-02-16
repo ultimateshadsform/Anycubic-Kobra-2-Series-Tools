@@ -1,7 +1,7 @@
 #!/bin/ash
 
-# Wait until the network is up; ping google.com
-while ! ping -c 1 google.com; do
+# Wait until the network is up; ping 1.1.1.1
+while ! ping -c 1 1.1.1.1; do
     sleep 1
 done
 
