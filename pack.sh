@@ -9,17 +9,14 @@ NC='\033[0m'
 FILES="sw-description sw-description.sig boot-resource uboot boot0 kernel rootfs dsp0 cpio_item_md5"
 
 # check the required tools
-TOOL_LIST=("md5sum" "openssl" "sha256sum" "mksquashfs")
-i=0
-part_num=${#TOOL_LIST[*]}
-while [ $i -lt $((part_num)) ]; do
-  echo "Checking tool: ${TOOL_LIST[$i]}"
-  t=$(which "${TOOL_LIST[$i]}")
-  if [ -z "$t" ]; then
-    echo -e "${RED}ERROR: Missing tool '${TOOL_LIST[$i]}' ${NC}"
+TOOL_LIST="md5sum openssl sha256sum mksquashfs"
+for tool_name in $TOOL_LIST; do
+  echo "Checking tool: $tool_name"
+  tool_path=$(which "$tool_name")
+  if [ -z "$tool_path" ]; then
+    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
     exit 1
   fi
-  i=$(($i + 1))
 done
 
 # remove the last created update

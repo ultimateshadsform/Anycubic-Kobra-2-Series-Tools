@@ -14,19 +14,14 @@ project_root="$1"
 python_package="$2"
 
 # check the required tools
-TOOL_LIST=("unzip")
-i=0
-part_num=${#TOOL_LIST[*]}
-while [ $i -lt $((part_num)) ]; do
-  echo "Checking tool: ${TOOL_LIST[$i]}"
-  t=$(which "${TOOL_LIST[$i]}")
-  if [ -z "$t" ]; then
-    if [ ! -f "$project_root/TOOLS/${TOOL_LIST[$i]}" ]; then
-      echo -e "${RED}ERROR: Missing tool '${TOOL_LIST[$i]}' ${NC}"
-      exit 2
-    fi
+TOOL_LIST="unzip"
+for tool_name in $TOOL_LIST; do
+  echo "Checking tool: $tool_name"
+  tool_path=$(which "$tool_name")
+  if [ -z "$tool_path" ]; then
+    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
+    exit 1
   fi
-  i=$(($i + 1))
 done
 
 # check the project root folder

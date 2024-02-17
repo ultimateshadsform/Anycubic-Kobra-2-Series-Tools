@@ -16,28 +16,24 @@ webcam_package="$2"
 # check the required tools
 app_version_tool=$(which app_version.sh)
 app_model_tool=$(which app_model.sh)
-TOOL_LIST=("unzip" "app_version.sh" "app_model.sh")
-i=0
-part_num=${#TOOL_LIST[*]}
-while [ $i -lt $((part_num)) ]; do
-  toolname=${TOOL_LIST[$i]}
-  echo "Checking tool: $toolname"
-  tpath=$(which "$toolname")
-  if [ -z "$tpath" ]; then
-    local_tool_path="$project_root/TOOLS/$toolname"
+TOOL_LIST="unzip app_version.sh app_model.sh"
+for tool_name in $TOOL_LIST; do
+  echo "Checking tool: $tool_name"
+  tool_path=$(which "$tool_name")
+  if [ -z "$tool_path" ]; then
+    local_tool_path="$project_root/TOOLS/$tool_name"
     if [ ! -f "$local_tool_path" ]; then
-      echo -e "${RED}ERROR: Missing tool '$toolname' ${NC}"
+      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
       exit 2
     else
-      if [ "$toolname" == "app_version.sh" ]; then
+      if [ "$tool_name" == "app_version.sh" ]; then
         app_version_tool="$local_tool_path"
       fi
-      if [ "$toolname" == "app_model.sh" ]; then
+      if [ "$tool_name" == "app_model.sh" ]; then
         app_model_tool="$local_tool_path"
       fi
     fi
   fi
-  i=$(($i + 1))
 done
 
 # check the project root folder
@@ -95,23 +91,23 @@ if [ "$app_ver" == "3.0.9" ]; then
   sed -i 's/video4linux/videoXlinux/g' "$def_target"
   if [ "$app_model" == "K2Pro" ]; then
     # stop the app to log the message 'cannot open video'
-    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339112 conv=notrunc &>>/dev/null
+    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339112 conv=notrunc
     # slow captive portal commmunication
-    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc &>>/dev/null
+    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc
     exit 0
   fi
   if [ "$app_model" == "K2Plus" ]; then
     # stop the app to log the message 'cannot open video'
-    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc &>>/dev/null
+    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc
     # slow captive portal commmunication
-    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc &>>/dev/null
+    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc
     exit 0
   fi
   if [ "$app_model" == "K2Max" ]; then
     # stop the app to log the message 'cannot open video'
-    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc &>>/dev/null
+    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc
     # slow captive portal commmunication
-    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc &>>/dev/null
+    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc
     exit 0
   fi
 fi

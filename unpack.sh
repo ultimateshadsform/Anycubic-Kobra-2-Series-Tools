@@ -29,19 +29,16 @@ if [ "$UPDATE_FILE_EXT" != "bin" ] && [ "$UPDATE_FILE_EXT" != "swu" ] && [ "$UPD
 fi
 
 # check the required tools
-TOOL_LIST=("cpio" "unsquashfs" "unzip" "ack2_swu_decrypt.py" "python3")
-i=0
-part_num=${#TOOL_LIST[*]}
-while [ $i -lt $((part_num)) ]; do
-  echo "Checking tool: ${TOOL_LIST[$i]}"
-  t=$(which "${TOOL_LIST[$i]}")
-  if [ -z "$t" ]; then
-    if [ ! -f "TOOLS/${TOOL_LIST[$i]}" ]; then
-      echo -e "${RED}ERROR: Missing tool '${TOOL_LIST[$i]}' ${NC}"
+TOOL_LIST="cpio unsquashfs unzip ack2_swu_decrypt.py python3"
+for tool_name in $TOOL_LIST; do
+  echo "Checking tool: $tool_name"
+  tool_path=$(which "$tool_name")
+  if [ -z "$tool_path" ]; then
+    if [ ! -f "TOOLS/$tool_name" ]; then
+      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
       exit 3
     fi
   fi
-  i=$(($i + 1))
 done
 
 # set the custom decrypt tool

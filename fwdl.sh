@@ -22,19 +22,16 @@ if [ "$par_model" != "K2Pro" ] && [ "$par_model" != "K2Plus" ] && [ "$par_model"
 fi
 
 # check the required tools
-TOOL_LIST=("curl" "wc" "awk")
-i=0
-part_num=${#TOOL_LIST[*]}
-while [ $i -lt $((part_num)) ]; do
-  echo "Checking tool: ${TOOL_LIST[$i]}"
-  t=$(which "${TOOL_LIST[$i]}")
-  if [ -z "$t" ]; then
-    if [ ! -f "TOOLS/${TOOL_LIST[$i]}" ]; then
-      echo -e "${RED}ERROR: Missing tool '${TOOL_LIST[$i]}' ${NC}"
-      exit 2
+TOOL_LIST="curl wc awk"
+for tool_name in $TOOL_LIST; do
+  echo "Checking tool: $tool_name"
+  tool_path=$(which "$tool_name")
+  if [ -z "$tool_path" ]; then
+    if [ ! -f "TOOLS/$tool_name" ]; then
+      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
+      exit 3
     fi
   fi
-  i=$(($i + 1))
 done
 
 url_bin="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/AC104_${par_model}_1.1.0_${par_version}_update.bin"
