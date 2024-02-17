@@ -5,6 +5,7 @@ from scp import SCPClient
 import paramiko
 import os
 import sys
+import time
 import getpass
 
 # Create hostname, username, ip struct to save
@@ -59,20 +60,16 @@ if __name__ == "__main__":
 
     print('Connected to the printer')
 
-    print('Creating /mnt/exUDISK/update')
-    # Create /mnt/exUDISK if it doesn't exist
-    ssh.exec_command('mkdir -p /mnt/exUDISK/update')
-
-    print('Copying update/update.swu to /mnt/exUDISK/update/update.swu')
+    print('Copying update/update.swu to /mnt/UDISK/update.swu')
 
     scp = SCPClient(ssh.get_transport(), progress=handle_progress)
-    scp.put('update/update.swu', remote_path='/mnt/exUDISK/update/update.swu', recursive=True)
+    scp.put('update/update.swu', remote_path='/mnt/UDISK/update.swu', recursive=True)
     scp.close()
 
-    # md5sum update/update.swu with /mnt/exUDISK/update.swu. If they don't match, try again 3 times
+    # md5sum update/update.swu with /mnt/UDISK/update.swu. If they don't match, try again 3 times
     for i in range(3):
         # Get md5sum of both files
-        stdin, stdout, stderr = ssh.exec_command('md5sum /mnt/exUDISK/update/update.swu')
+        stdin, stdout, stderr = ssh.exec_command('md5sum /mnt/UDISK/update.swu')
         md5sum_remote = stdout.read().decode('utf-8').split(' ')[0]
         md5sum_local = os.popen('md5sum update/update.swu').read().split(' ')[0]
 
@@ -88,14 +85,16 @@ if __name__ == "__main__":
 
             # If current_boot_partition is bootA, run swupdate with bootB. example: now_A_next_B
             boot_partition = "now_A_next_B" if current_boot_partition == "bootA" else "now_B_next_A"
-            ssh.exec_command(f'swupdate_cmd.sh -i /mnt/exUDISK/update/update.swu -e stable,{boot_partition} -k /etc/swupdate_public.pem')
+            ssh.exec_command(f'swupdate_cmd.sh -i /mnt/UDISK/update.swu -e stable,{boot_partition} -k /etc/swupdate_public.pem')
             print("Update started... Please wait for the printer to reboot")
+            # wait for the update to complete, the printer to reboot and then close the connection
+            time.sleep(60)
             break
         else:
             # Delete the file and try again
             print(f'MD5 sums do not match... Trying again. Current attempt: {i+1}')
-            ssh.exec_command('rm /mnt/exUDISK/update.swu')
-            scp.put('update/update.swu', remote_path='/mnt/exUDISK/update/update.swu', recursive=True)
+            ssh.exec_command('rm /mnt/UDISK/update.swu')
+            scp.put('update/update.swu', remote_path='/mnt/UDISK/update.swu', recursive=True)
             scp.close()
 
 

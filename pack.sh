@@ -5,19 +5,31 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
+# the result of installed options log
+installed_options="installed_options.log"
+
 # files needed
 FILES="sw-description sw-description.sig boot-resource uboot boot0 kernel rootfs dsp0 cpio_item_md5"
 
 # check the required tools
-TOOL_LIST="md5sum openssl sha256sum mksquashfs"
+TOOL_LIST="grep md5sum openssl sha256sum mksquashfs python3 auto_install.py"
 for tool_name in $TOOL_LIST; do
   echo "Checking tool: $tool_name"
   tool_path=$(which "$tool_name")
   if [ -z "$tool_path" ]; then
-    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-    exit 1
+    if [ ! -f "TOOLS/$tool_name" ]; then
+      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
+      exit 3
+    fi
   fi
 done
+
+# set the custom auto update tool
+AUTO_UPDATE_TOOL=$(which "auto_install.py")
+if [ -z "$AUTO_UPDATE_TOOL" ]; then
+  # if not installed use the local copy
+  AUTO_UPDATE_TOOL="TOOLS/auto_install.py"
+fi
 
 # remove the last created update
 rm -rf update
@@ -72,20 +84,21 @@ cd ..
 
 echo ""
 echo -e "${GREEN}Packing done: Use the file update/update.swu to do USB update${NC}"
-# Check if md5sum is available
-if [ -z "$(which md5sum)" ]; then
-  echo -e "${RED}ERROR: Cannot find the tool 'md5sum' You will need to calculate the md5sum manually${NC}"
-  exit 0
-else
-  echo -e "md5sum: $(md5sum update/update.swu)"
-fi
 echo ""
 
-# Ask if the user wants to attempt to auto install the update. If yes then run the auto install script
-read -r -p "Do you want to attempt to auto install the update? [y/N] " response
-if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  # Run TOOLS/auto_install.py
-  python3 TOOLS/auto_install.py
+# check if the auto update is possible
+if [ -f "$installed_options" ]; then
+  root_pw=$(grep "root_access=" "$installed_options")
+  if [ -z "$root_pw" ] || [ "$root_pw" == 'root_access=""' ]; then
+    echo "Root access option is not installed and the auto update is not possible. Please use the USB update procedure."
+  else
+    # Ask if the user wants to attempt to auto install the update. If yes then run the auto install script
+    read -r -p "Do you want to attempt to auto install the update? [y/N] " response
+    if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+      # Run AUTO_UPDATE_TOOL
+      python3 "$AUTO_UPDATE_TOOL"
+    fi
+  fi
 fi
 
 exit 0

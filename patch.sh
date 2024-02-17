@@ -75,7 +75,7 @@ for option in $options; do
         exit 4
       fi
       # set this option as already installed
-      echo "$opt_script" >>"$installed_options"
+      echo "$option=\"$par\"" >>"$installed_options"
     else
       # this is an option requirement that needs validation
       found=""

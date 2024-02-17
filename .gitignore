@@ -4,3 +4,7 @@ FW/*.swu
 FW/*.zip
 unpacked/*
 installed_options.log
+k2pro.cfg
+k2plus.cfg
+k2max.cfg
+my.cfg
