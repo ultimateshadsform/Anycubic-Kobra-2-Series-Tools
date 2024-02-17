@@ -10,7 +10,7 @@ To be able to send MQTT commands to the device, you need to connect and use the 
 (All commands will need to be sent here)
 
 ```
-anycubic/anycubicCloud/v1/server/printer/20023/<PRINTER_ID>/response
+anycubic/anycubicCloud/v1/server/printer/<PRINTER_MODEL_ID>/<PRINTER_ID>/response
 ```
 
 You can find the printer id by taking the first 32 characters of the file:
@@ -18,6 +18,8 @@ You can find the printer id by taking the first 32 characters of the file:
 ```
 /user/ac_mqtt_connect_info
 ```
+
+The `<PRINTER_MODEL_ID>` can be `20021` for K2Pro, `20022` for K2Plus or `20023` for K2Max.
 
 Then to see received responses from the printer, you need to subscribe to the following topic:
 

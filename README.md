@@ -28,13 +28,13 @@ This [flashforge](https://github.com/FlashforgeOfficial/AD5M_Series_Klipper) is 
 5. Run `pack.sh` to pack the firmware files from the folder `unpacked`. The result is the file `update/update.swu`.
 6. If your printer is still with the original firmware, you have to make root access first. Then replace the `/etc/swupdate_public.pem` in the printer with the one from the `RESOURCES` directory or create your own (make a copy first of the original `/etc/swupdate_public.pem` key in case you want to return to the original `ota` updates). Then apply the newly generated custom software `update/update.swu` by USB update (place the file `update.swu` in the folder `update` on the root of a FAT/FAT32 formated USB disk). If your printer already has custom update installed, then you can directly apply the new update by USB update.
 
-Default password for the root access (UART and SSH) is `toor` but it can be changed in the `options.cfg` file.
-
-OPKG will be included with the option `ssh` if it is enabled.
-
 ### Notes
 
 This repository is a work in progress and may contain bugs or may not work as expected any pull requests are welcome.
+
+Default password for the root access (UART and SSH) is `toor` but it can be changed in the `options.cfg` file.
+
+Start the scripts directly by `./script_name.sh <parameters>` to be started by the requested `bash` shell. Shells like `sh` are not compatible at this time.
 
 ### Information
 
