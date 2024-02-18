@@ -14,7 +14,7 @@ project_root="$1"
 python_package="$2"
 
 # check the required tools
-TOOL_LIST="unzip"
+TOOL_LIST="unzip sed"
 for tool_name in $TOOL_LIST; do
   echo "Checking tool: $tool_name"
   tool_path=$(which "$tool_name")

@@ -12,7 +12,7 @@ installed_options="installed_options.log"
 FILES="sw-description sw-description.sig boot-resource uboot boot0 kernel rootfs dsp0 cpio_item_md5"
 
 # check the required tools
-TOOL_LIST="grep md5sum openssl sha256sum mksquashfs python3 auto_install.py"
+TOOL_LIST="grep md5sum openssl wc awk sha256sum mksquashfs python3 auto_install.py"
 for tool_name in $TOOL_LIST; do
   echo "Checking tool: $tool_name"
   tool_path=$(which "$tool_name")
@@ -40,12 +40,20 @@ cd unpacked || exit 2
 rm -rf rootfs
 mksquashfs squashfs-root rootfs -comp xz -all-root
 
+# check if the updated rootfs can fit in the partitions rootfsA/B
+file_size=$(wc -c rootfs | awk '{print $1}')
+if [ "$file_size" -ge 134217729 ]; then
+  echo -e "${RED}ERROR: The size of the file 'unpacked/rootfs' is larger than the max 128MB allowed.\Please disable some of the less important options and try again! ${NC}"
+  cd ..
+  exit 3
+fi
+
 # check the input files
 for i in $FILES; do
   if [ "$i" != "cpio_item_md5" ] && [ ! -f "$i" ]; then
     echo -e "${RED}ERROR: Cannot find the input file '$i' ${NC}"
     cd ..
-    exit 3
+    exit 4
   fi
 done
 
@@ -59,7 +67,8 @@ for i in $FILES; do
       sed -i -e "s/$hash_old/$hash_new/g" sw-description
     else
       echo -e "${RED}ERROR: Cannot find the hash for: '$i' ${NC}"
-      exit 4
+      cd ..
+      exit 5
     fi
   fi
 done

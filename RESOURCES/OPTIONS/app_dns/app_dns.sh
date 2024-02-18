@@ -13,6 +13,17 @@ fi
 project_root="$1"
 dns_replacement="$2"
 
+# check the required tools
+TOOL_LIST="printf dd grep cut xargs"
+for tool_name in $TOOL_LIST; do
+  echo "Checking tool: $tool_name"
+  tool_path=$(which "$tool_name")
+  if [ -z "$tool_path" ]; then
+    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
+    exit 1
+  fi
+done
+
 # check the project root folder
 if [ ! -d "$project_root" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$project_root' ${NC}"

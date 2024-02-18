@@ -27,7 +27,7 @@ if [ ! -f "$optionsfile" ]; then
 fi
 
 # check the required tools
-TOOL_LIST="awk"
+TOOL_LIST="awk head sed"
 for tool_name in $TOOL_LIST; do
   echo "Checking tool: $tool_name"
   tool_path=$(which "$tool_name")

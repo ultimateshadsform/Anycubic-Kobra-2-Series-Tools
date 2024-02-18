@@ -15,6 +15,17 @@ fi
 def_target="$1/unpacked/squashfs-root/app/app"
 def_url="$2"
 
+# check the required tools
+TOOL_LIST="printf dd grep awk"
+for tool_name in $TOOL_LIST; do
+  echo "Checking tool: $tool_name"
+  tool_path=$(which "$tool_name")
+  if [ -z "$tool_path" ]; then
+    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
+    exit 1
+  fi
+done
+
 # check the input file
 if [ ! -f "$def_target" ]; then
   echo -e "${RED}ERROR: Cannot find the app file ${NC}"

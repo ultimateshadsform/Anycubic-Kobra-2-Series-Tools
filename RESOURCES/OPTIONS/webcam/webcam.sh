@@ -16,7 +16,7 @@ webcam_package="$2"
 # check the required tools
 app_version_tool=$(which app_version.sh)
 app_model_tool=$(which app_model.sh)
-TOOL_LIST="unzip app_version.sh app_model.sh"
+TOOL_LIST="unzip app_version.sh app_model.sh dd printf"
 for tool_name in $TOOL_LIST; do
   echo "Checking tool: $tool_name"
   tool_path=$(which "$tool_name")

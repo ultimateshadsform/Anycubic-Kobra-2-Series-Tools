@@ -13,6 +13,17 @@ fi
 project_root="$1"
 startup_script="$2"
 
+# check the required tools
+TOOL_LIST="sed"
+for tool_name in $TOOL_LIST; do
+    echo "Checking tool: $tool_name"
+    tool_path=$(which "$tool_name")
+    if [ -z "$tool_path" ]; then
+        echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
+        exit 1
+    fi
+done
+
 # Check if $startup_script is available
 if [ ! -f "$project_root/RESOURCES/OPTIONS/startup_script/$startup_script" ]; then
     echo -e "${RED}ERROR: Cannot find the file '$startup_script' ${NC}"
