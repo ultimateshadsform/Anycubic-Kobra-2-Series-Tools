@@ -52,7 +52,7 @@ fi
 rm -rf unpacked
 mkdir unpacked
 
-# preprocess the update file
+# preprocessing the update file
 if [ "$UPDATE_FILE_EXT" == "bin" ]; then
   # decrypt the update if it is encrypted
   $DECRYPT_TOOL -i "$UPDATE_FILE" -o ./unpacked/update.zip

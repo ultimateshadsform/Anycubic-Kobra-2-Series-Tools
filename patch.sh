@@ -90,13 +90,13 @@ for option in $options; do
         echo -e "${RED}ERROR: Option '$option' requires option '$req_option' which is missing or not enabled. ${NC}"
         exit 5
       fi
-      echo -e "${GREEN}Option '$option' requires option '$req_option'. This requirement was successfuly validated. ${NC}"
+      echo -e "${GREEN}Option '$option' requires option '$req_option'. This requirement was successfully validated. ${NC}"
     fi
   done
 done
 
 echo ""
-echo -e "${GREEN}DONE! The selected options are successfuly processed.${NC}\nYou may do manually more changes in the 'unpacked' folder if needed."
+echo -e "${GREEN}DONE! The selected options are successfully processed.${NC}\nYou may do manually more changes in the 'unpacked' folder if needed."
 echo ""
 
 exit 0

@@ -7,7 +7,7 @@ To perform a restore follow these steps according to the current printer working
 A/ In case your printer is in good working conditions (it can somehow boot) and you are using firmware version that has uboot enabled.
 
 1. Turn on the printer and stop the booting process by holding key 's'
-2. Insert a USB disk (FAT32 formated) with the file [restore.scr](../extra-stuff/emmc/restore.scr) on it for complete emmc restore. If you need to restore just the system partitions use the file [srestore.scr](../extra-stuff/emmc/srestore.scr) instead.
+2. Insert a USB disk (FAT32 formatted) with the file [restore.scr](../extra-stuff/emmc/restore.scr) on it for complete emmc restore. If you need to restore just the system partitions use the file [srestore.scr](../extra-stuff/emmc/srestore.scr) instead.
 3. From the uboot shell enter the following:
 
 ```sh

@@ -5,7 +5,7 @@ This procedure is recommended to be performed when your printer is completely se
 To perform a backup follow these steps:
 
 1. Use the original app version 2.39 and stop the booting process by holding key 's' (or use any custom firmware update that has the UART enabled)
-2. Insert a USB disk (FAT32 formated) with the file [backup.scr](../extra-stuff/emmc/backup.scr) on it for complete emmc backup. If you need to backup just the system partitions use the file [sbackup.scr](../extra-stuff/emmc/sbackup.scr) instead.
+2. Insert a USB disk (FAT32 formatted) with the file [backup.scr](../extra-stuff/emmc/backup.scr) on it for complete emmc backup. If you need to backup just the system partitions use the file [sbackup.scr](../extra-stuff/emmc/sbackup.scr) instead.
 3. From the uboot shell enter the following:
 
 ```sh
@@ -36,7 +36,7 @@ fatload usb 0:1 42000000 backup.scr
 
 For a system backup replace the above script name `backup.scr` with the name `sbackup.scr`.
 
-4. Remove the USB disk with the scripts and insert at least 8GB USB disk for a complete backup (or at least 1GB USB disk for a system backup). It can be formated or not and it will be completely rewritten by the contents of the eMMC. NOTE: Do not use a disk with important information! All data on it will be lost!
+4. Remove the USB disk with the scripts and insert at least 8GB USB disk for a complete backup (or at least 1GB USB disk for a system backup). It can be formatted or not and it will be completely rewritten by the contents of the eMMC. NOTE: Do not use a disk with important information! All data on it will be lost!
 
 5. Type the following to execute the script:
 
@@ -44,7 +44,7 @@ For a system backup replace the above script name `backup.scr` with the name `sb
 source 42000000
 ```
 
-6. Wait about 15 minutes (or about 2 minutes for a system backup) and the entire emmc (or the system part of it) will be transfered 1:1 to the USB disk
+6. Wait about 15 minutes (or about 2 minutes for a system backup) and the entire emmc (or the system part of it) will be transferred 1:1 to the USB disk
    If you see an error and the script stopped before showing 100%, insert another type USB disk and enter again:
 
 ```sh

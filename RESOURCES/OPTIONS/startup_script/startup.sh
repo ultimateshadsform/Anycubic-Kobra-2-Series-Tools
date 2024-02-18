@@ -30,7 +30,7 @@ fi
 
 # Check if ca-certificates is installed with opkg
 # opkg list | grep ca-certificates
-# check if cetificates are installed
+# check if certificates are installed
 if ! opkg list-installed | grep -q ca-certificates; then
     opkg install ca-certificates
 fi
