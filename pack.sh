@@ -89,13 +89,14 @@ echo ""
 # check if the auto update is possible
 if [ -f "$installed_options" ]; then
   root_pw=$(grep "root_access=" "$installed_options")
-  if [ -z "$root_pw" ] || [ "$root_pw" == 'root_access=""' ]; then
-    echo "Root access option is not installed and the auto update is not possible. Please use the USB update procedure."
+  ssh_option=$(grep "ssh=" "$installed_options")
+  if [ -z "$root_pw" ] || [ "$root_pw" == 'root_access=""' ] || [ -z "$ssh_option" ]; then
+    echo -e "Root access option is not installed, the root password is empty or the ssh is disabled.\nThe auto update is not possible. Please use the USB update procedure."
   else
     # Ask if the user wants to attempt to auto install the update. If yes then run the auto install script
     read -r -p "Do you want to attempt to auto install the update? [y/N] " response
     if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-      # Run AUTO_UPDATE_TOOL
+      # Run the auto update tool
       python3 "$AUTO_UPDATE_TOOL"
     fi
   fi
