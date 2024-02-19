@@ -38,6 +38,11 @@ Start the scripts directly by `./script_name.sh <parameters>` to be started by t
 
 Use only FAT32 formatted USB disks and place the file `update.swu` inside a folder `update` created at the root of the USB disk.
 
+In order for the auto update upload to work properly, you need to setup in advance the configuration file `auto_install.cfg`. It requires one line of text with the following information:
+`host_ip`,`user_name`,`printer_ip`,`ssh_port`
+Example:
+`192.168.1.234,root,192.168.1.242,22`
+
 ### Information
 
 **FW** - Place `.bin`, `.zip` or `.swu` firmware files here.
