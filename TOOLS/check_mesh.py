@@ -33,6 +33,6 @@ with open(input_file, 'r') as f:
     for i in range(grid_size):
         # print(f'{i} {mesh[i]}')
         # Unstructure the array 
-        print(f'{i} {", ".join(mesh[i])}')
+        print(f'{i} {" ".join(mesh[i])}')
 
         
