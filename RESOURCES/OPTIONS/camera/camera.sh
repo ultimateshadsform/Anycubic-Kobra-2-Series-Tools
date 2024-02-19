@@ -13,6 +13,12 @@ fi
 project_root="$1"
 webcam_package="$2"
 
+auto_start="N"
+if [ "$webcam_package" == "default.run" ]; then
+  webcam_package="default"
+  auto_start="Y"
+fi
+
 # check the required tools
 app_version_tool=$(which app_version.sh)
 app_model_tool=$(which app_model.sh)
@@ -43,14 +49,14 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the webcam package folder
-webcam_package_folder="${project_root}/RESOURCES/OPTIONS/webcam/${webcam_package}"
+webcam_package_folder="${project_root}/RESOURCES/OPTIONS/camera/${webcam_package}"
 if [ ! -d "$webcam_package_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$webcam_package_folder' ${NC}"
   exit 4
 fi
 
 # check the webcam package file
-webcam_package_file="${webcam_package_folder}/webcam.zip"
+webcam_package_file="${webcam_package_folder}/camera.zip"
 if [ ! -f "$webcam_package_file" ]; then
   echo -e "${RED}ERROR: Cannot find the file '$webcam_package_file' ${NC}"
   exit 5
@@ -68,6 +74,11 @@ current_folder="$PWD"
 cd "$target_folder" || exit 7
 unzip -o "$webcam_package_file"
 cd "$current_folder" || exit 8
+
+if [ "$auto_start" == "N" ]; then
+  # auto start not requested, remove the auto start
+  rm -f "$project_root/unpacked/squashfs-root/opt/etc/init.d/S55camera"
+fi
 
 # try to find out the app version (like app_ver="309")
 def_target="$project_root/unpacked/squashfs-root/app/app"
@@ -87,6 +98,7 @@ fi
 # patch the app based on the model and the version
 
 if [ "$app_ver" == "3.0.9" ]; then
+
   # stop the app for looking for inserted webcam
   sed -i 's/video4linux/videoXlinux/g' "$def_target"
   if [ "$app_model" == "K2Pro" ]; then
