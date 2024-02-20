@@ -13,9 +13,11 @@ fi
 project_root="$1"
 webcam_package="$2"
 
+package_name="${webcam_package%.*}"
+package_action="${webcam_package##*.}"
+
 auto_start="N"
-if [ "$webcam_package" == "default.run" ]; then
-  webcam_package="default"
+if [ "$package_action" == "run" ]; then
   auto_start="Y"
 fi
 
@@ -49,7 +51,7 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the webcam package folder
-webcam_package_folder="${project_root}/RESOURCES/OPTIONS/camera/${webcam_package}"
+webcam_package_folder="${project_root}/RESOURCES/OPTIONS/camera/${package_name}"
 if [ ! -d "$webcam_package_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$webcam_package_folder' ${NC}"
   exit 4
