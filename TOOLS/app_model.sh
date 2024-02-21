@@ -9,9 +9,13 @@ fi
 app_file="$1"
 
 # try to find out the model
+offset_pro=$(grep --binary-files=text -m1 -b -o "unmodifiable.cfg" "$app_file" | awk -F: '{print $1}')
 offset_max=$(grep --binary-files=text -m1 -b -o "unmodifiable_max.cfg" "$app_file" | awk -F: '{print $1}')
 offset_plus=$(grep --binary-files=text -m1 -b -o "unmodifiable_plus.cfg" "$app_file" | awk -F: '{print $1}')
-app_model="K2Pro"
+app_model="Unknown"
+if [ -n "$offset_pro" ]; then
+  app_model="K2Pro"
+fi
 if [ -n "$offset_plus" ]; then
   app_model="K2Plus"
 fi
