@@ -106,22 +106,16 @@ if [ "$app_ver" == "3.0.9" ]; then
   if [ "$app_model" == "K2Pro" ]; then
     # stop the app to log the message 'cannot open video'
     printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339112 conv=notrunc
-    # slow captive portal communication
-    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc
     exit 0
   fi
   if [ "$app_model" == "K2Plus" ]; then
     # stop the app to log the message 'cannot open video'
     printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc
-    # slow captive portal communication
-    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc
     exit 0
   fi
   if [ "$app_model" == "K2Max" ]; then
     # stop the app to log the message 'cannot open video'
     printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc
-    # slow captive portal communication
-    printf "\xff\x8f\x0f\xe3" | dd of="$def_target" bs=1 seek=63492 conv=notrunc
     exit 0
   fi
 fi
