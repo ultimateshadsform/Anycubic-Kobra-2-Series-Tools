@@ -3,7 +3,7 @@
 project_root="$PWD"
 
 # Source the utils.sh file
-source "$project_root/RESOURCES/helpers/utils.sh" "$project_root"
+source "$project_root/TOOLS/helpers/utils.sh" "$project_root"
 
 # the default options file
 optionsfile="options.cfg"
