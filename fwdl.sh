@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BROWN='\033[0;33m'
-NC='\033[0m'
+project_root="$PWD"
+
+# Source the utils.sh file
+source "$project_root/TOOLS/helpers/utils.sh" "$project_root"
 
 # check the parameters for a model and version
 if [ $# != 2 ]; then
@@ -28,17 +27,7 @@ if [ "$par_models" = "all" ] || [ "$par_models" = "ALL" ]; then
 fi
 
 # check the required tools
-TOOL_LIST="curl wc awk"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    if [ ! -f "TOOLS/$tool_name" ]; then
-      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-      exit 3
-    fi
-  fi
-done
+check_tools "curl wc awk"
 
 for par_model in $par_models; do
 

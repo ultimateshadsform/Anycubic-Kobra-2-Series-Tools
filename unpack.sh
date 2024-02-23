@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
+project_root="$PWD"
+
+# Source the utils.sh file
+source "$project_root/TOOLS/helpers/utils.sh" "$project_root"
 
 # check the number of arguments
 if (($# != 1)); then
@@ -29,17 +29,7 @@ if [ "$UPDATE_FILE_EXT" != "bin" ] && [ "$UPDATE_FILE_EXT" != "swu" ] && [ "$UPD
 fi
 
 # check the required tools
-TOOL_LIST="cpio unsquashfs unzip ack2_swu_decrypt.py python3"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    if [ ! -f "TOOLS/$tool_name" ]; then
-      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-      exit 3
-    fi
-  fi
-done
+check_tools "cpio unsquashfs unzip ack2_swu_decrypt.py python3"
 
 # set the custom decrypt tool
 DECRYPT_TOOL=$(which "ack2_swu_decrypt.py")
