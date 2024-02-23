@@ -6,3 +6,4 @@ unpacked/*
 installed_options.log
 auto_install.cfg
 printer*.cfg
+/emmc_dump

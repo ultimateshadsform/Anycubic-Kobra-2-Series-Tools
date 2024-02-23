@@ -49,7 +49,7 @@ fi
 # enable the selected webcam package
 current_folder="$PWD"
 cd "$target_folder" || exit 7
-unzip -o "$webcam_package_file"
+unzip -oqq "$webcam_package_file"
 cd "$current_folder" || exit 8
 
 if [ "$auto_start" == "N" ]; then

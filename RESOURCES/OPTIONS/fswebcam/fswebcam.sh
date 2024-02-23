@@ -41,7 +41,7 @@ fi
 # enable the selected fswebcam package
 current_folder="$PWD"
 cd "$target_folder" || exit 7
-unzip -o "$fswebcam_package_file"
+unzip -oqq "$fswebcam_package_file"
 # extend the PATH to $project_root/unpacked/squashfs-root/etc/profile
 sed -i 's#export PATH="/usr/sbin:/usr/bin:/sbin:/bin"#export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"#' "$project_root/unpacked/squashfs-root/etc/profile"
 cd "$current_folder" || exit 8

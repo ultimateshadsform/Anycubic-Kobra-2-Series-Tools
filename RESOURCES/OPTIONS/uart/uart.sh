@@ -43,7 +43,7 @@ fi
 current_folder="$PWD"
 cd "$target_folder" || exit 7
 echo -e "${YELLOW}INFO: Unzipping the UART package ...${NC}"
-unzip -o "$uart_package_file" >/dev/null 2>&1
+unzip -oqq "$uart_package_file"
 cd "$current_folder" || exit 8
 
 echo -e "${GREEN}INFO: The UART package has been installed. Version: $uart_package ${NC}"
