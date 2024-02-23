@@ -42,7 +42,8 @@ fi
 # enable the selected python package
 current_folder="$PWD"
 cd "$target_folder" || exit 7
-unzip -o "$python_package_file"
+echo -e "${YELLOW}INFO: Unzipping the python package ...${NC}"
+unzip -o "$python_package_file" >/dev/null 2>&1
 # extend the PATH to $project_root/unpacked/squashfs-root/etc/profile
 sed -i 's#export PATH="/usr/sbin:/usr/bin:/sbin:/bin"#export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"#' "$ROOTFS_DIR/etc/profile"
 cd "$current_folder" || exit 8

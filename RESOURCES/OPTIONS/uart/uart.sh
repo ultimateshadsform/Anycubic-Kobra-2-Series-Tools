@@ -42,7 +42,8 @@ fi
 # enable the selected ssh package
 current_folder="$PWD"
 cd "$target_folder" || exit 7
-unzip -o "$uart_package_file"
+echo -e "${YELLOW}INFO: Unzipping the UART package ...${NC}"
+unzip -o "$uart_package_file" >/dev/null 2>&1
 cd "$current_folder" || exit 8
 
 echo -e "${GREEN}INFO: The UART package has been installed. Version: $uart_package ${NC}"

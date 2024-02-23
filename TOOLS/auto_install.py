@@ -85,6 +85,8 @@ if __name__ == "__main__":
 
             # If current_boot_partition is bootA, run swupdate with bootB. example: now_A_next_B
             boot_partition = "now_A_next_B" if current_boot_partition == "bootA" else "now_B_next_A"
+            print(f'Current boot partition: {current_boot_partition}')
+            print(f'Running swupdate with boot partition: {boot_partition}')
             ssh.exec_command(f'swupdate_cmd.sh -i /mnt/UDISK/update.swu -e stable,{boot_partition} -k /etc/swupdate_public.pem')
             print("Update started... Please wait for the printer to reboot")
             # wait for the update to complete, the printer to reboot and then close the connection

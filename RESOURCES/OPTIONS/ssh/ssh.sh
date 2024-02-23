@@ -42,7 +42,8 @@ fi
 # enable the selected ssh package
 current_folder="$PWD"
 cd "$target_folder" || exit 7
-unzip -o "$ssh_package_file"
+echo -e "${YELLOW}INFO: Unzipping the ssh package ...${NC}"
+unzip -o "$ssh_package_file" >/dev/null 2>&1
 # add "/opt/etc/init.d/rc.unslung start" to $project_root/unpacked/squashfs-root/etc/rc.local before the exit 0 line
 result=$(grep "/opt/etc/init.d/rc.unslung start" "$ROOTFS_DIR/etc/rc.local")
 if [ -z "$result" ]; then

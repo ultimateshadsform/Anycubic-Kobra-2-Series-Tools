@@ -44,7 +44,8 @@ if ! opkg list-installed | grep -q curl; then
 fi
 
 # Create link from /opt/etc/ssl/certs to /etc/ssl/certs
-ln -s /opt/etc/ssl/certs /etc/ssl
+echo -e "${YELLOW}Creating link from /opt/etc/ssl/certs to /etc/ssl/certs${NC}"
+ln -s /opt/etc/ssl/certs /etc/ssl >/dev/null 2>&1
 
 # Copy ca.crt client.crt and client.key server.crt and server.key to /user in one command
 # Copy the files to /user
