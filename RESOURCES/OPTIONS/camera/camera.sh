@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <webcam_package>"
@@ -22,28 +17,7 @@ if [ "$package_action" == "run" ]; then
   auto_start="Y"
 fi
 
-# check the required tools
-app_version_tool=$(which app_version.sh)
-app_model_tool=$(which app_model.sh)
-TOOL_LIST="unzip app_version.sh app_model.sh dd printf"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    local_tool_path="$project_root/TOOLS/$tool_name"
-    if [ ! -f "$local_tool_path" ]; then
-      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-      exit 2
-    else
-      if [ "$tool_name" == "app_version.sh" ]; then
-        app_version_tool="$local_tool_path"
-      fi
-      if [ "$tool_name" == "app_model.sh" ]; then
-        app_model_tool="$local_tool_path"
-      fi
-    fi
-  fi
-done
+check_tools "unzip app_version.sh app_model.sh dd printf"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then
@@ -52,7 +26,7 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the webcam package folder
-webcam_package_folder="${project_root}/RESOURCES/OPTIONS/camera/${package_name}"
+webcam_package_folder="$OPTIONS_DIR/camera/$package_name"
 if [ ! -d "$webcam_package_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$webcam_package_folder' ${NC}"
   exit 4
@@ -66,7 +40,7 @@ if [ ! -f "$webcam_package_file" ]; then
 fi
 
 # check the target folder
-target_folder="$project_root/unpacked/squashfs-root"
+target_folder="$ROOTFS_DIR"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
   exit 6
@@ -80,11 +54,11 @@ cd "$current_folder" || exit 8
 
 if [ "$auto_start" == "N" ]; then
   # auto start not requested, remove the auto start
-  rm -f "$project_root/unpacked/squashfs-root/opt/etc/init.d/S55camera"
+  rm -f "$ROOTFS_DIR/opt/etc/init.d/S55camera"
 fi
 
 # try to find out the app version (like app_ver="309")
-def_target="$project_root/unpacked/squashfs-root/app/app"
+def_target="$ROOTFS_DIR/app/app"
 app_ver=$("$app_version_tool" "$def_target")
 if [ $? != 0 ]; then
   echo -e "${RED}ERROR: Cannot find the app version ${NC}"

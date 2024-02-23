@@ -22,14 +22,14 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the target folder
-target_folder="$project_root/unpacked/squashfs-root"
+target_folder="$ROOTFS_DIR"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
   exit 4
 fi
 
 # try to find out the app version (like app_ver="309")
-def_target="$project_root/unpacked/squashfs-root/app/app"
+def_target="$ROOTFS_DIR/app/app"
 app_ver=$("$app_version_tool" "$def_target")
 if [ $? != 0 ]; then
   echo -e "${RED}ERROR: Cannot find the app version ${NC}"
@@ -44,7 +44,7 @@ if [ $? != 0 ]; then
 fi
 
 # find if the selected setting file exists
-settings_file="$project_root/RESOURCES/OPTIONS/app_net_ready/$settings/${app_ver}.${app_model}"
+settings_file="$OPTIONS_DIR/app_net_ready/$settings/${app_ver}.${app_model}"
 if [ ! -f "$settings_file" ]; then
   echo -e "${RED}ERROR: Unsupported model and version! Cannot find the settings file '$settings_file' ${NC}"
   exit 7

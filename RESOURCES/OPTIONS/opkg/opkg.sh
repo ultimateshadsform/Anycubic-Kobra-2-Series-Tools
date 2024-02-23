@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <opkg_package>"
@@ -15,15 +10,7 @@ project_root="$1"
 opkg_package="$2"
 
 # check the required tools
-TOOL_LIST="unzip grep sed"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-    exit 1
-  fi
-done
+check_tools "unzip grep sed"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then
@@ -32,7 +19,7 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the opkg package folder
-opkg_package_folder="${project_root}/RESOURCES/OPTIONS/opkg/${opkg_package}"
+opkg_package_folder="${OPTIONS_DIR}/opkg/${opkg_package}"
 if [ ! -d "$opkg_package_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$opkg_package_folder' ${NC}"
   exit 4
@@ -46,7 +33,7 @@ if [ ! -f "$opkg_package_file" ]; then
 fi
 
 # check the target folder
-target_folder="$project_root/unpacked/squashfs-root"
+target_folder="$ROOTFS_DIR"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
   exit 6
@@ -57,13 +44,13 @@ current_folder="$PWD"
 cd "$target_folder" || exit 7
 unzip -o "$opkg_package_file"
 # add "/opt/etc/init.d/rc.unslung start" to $project_root/unpacked/squashfs-root/etc/rc.local before the exit 0 line
-result=$(grep "/opt/etc/init.d/rc.unslung start" "$project_root/unpacked/squashfs-root/etc/rc.local")
+result=$(grep "/opt/etc/init.d/rc.unslung start" "$ROOTFS_DIR/etc/rc.local")
 if [ -z "$result" ]; then
   # add it only if not already done
-  sed -i '/exit 0/i /opt/etc/init.d/rc.unslung start' "$project_root/unpacked/squashfs-root/etc/rc.local"
+  sed -i '/exit 0/i /opt/etc/init.d/rc.unslung start' "$ROOTFS_DIR/etc/rc.local"
 fi
 # extend the PATH to $project_root/unpacked/squashfs-root/etc/profile
-sed -i 's#export PATH="/usr/sbin:/usr/bin:/sbin:/bin"#export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"#' "$project_root/unpacked/squashfs-root/etc/profile"
+sed -i 's#export PATH="/usr/sbin:/usr/bin:/sbin:/bin"#export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"#' "$ROOTFS_DIR/etc/profile"
 cd "$current_folder" || exit 8
 
 echo -e "${GREEN}SUCCESS: The '$opkg_package' opkg package has been installed ${NC}"

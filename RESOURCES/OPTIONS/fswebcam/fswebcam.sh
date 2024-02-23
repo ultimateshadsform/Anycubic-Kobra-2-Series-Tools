@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <fswebcam_package>"
@@ -14,16 +9,7 @@ fi
 project_root="$1"
 fswebcam_package="$2"
 
-# check the required tools
-TOOL_LIST="unzip sed"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-    exit 1
-  fi
-done
+check_tools "unzip sed"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then
@@ -32,7 +18,7 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the fswebcam package folder
-fswebcam_package_folder="${project_root}/RESOURCES/OPTIONS/fswebcam/${fswebcam_package}"
+fswebcam_package_folder="${OPTIONS_DIR}/fswebcam/${fswebcam_package}"
 if [ ! -d "$fswebcam_package_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$fswebcam_package_folder' ${NC}"
   exit 4
@@ -46,7 +32,7 @@ if [ ! -f "$fswebcam_package_file" ]; then
 fi
 
 # check the target folder
-target_folder="$project_root/unpacked/squashfs-root"
+target_folder="$ROOTFS_DIR"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
   exit 6

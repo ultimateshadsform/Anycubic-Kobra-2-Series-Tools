@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <boot_resource>"
@@ -21,21 +16,21 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the selected boot resource folder
-boot_resource_folder="$project_root/RESOURCES/OPTIONS/boot_resource/$boot_resource"
+boot_resource_folder="$OPTIONS_DIR/boot_resource/$boot_resource"
 if [ ! -d "$boot_resource_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$boot_resource_folder' ${NC}"
   exit 3
 fi
 
 # check the selected boot resource file
-boot_resource_file="$project_root/RESOURCES/OPTIONS/boot_resource/$boot_resource/boot-resource"
+boot_resource_file="$boot_resource_folder/boot-resource"
 if [ ! -f "$boot_resource_file" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$boot_resource_file'\nPlease use 'sudo ./process.sh' to create the 'boot_resource' file from the source folder ${NC}"
   exit 3
 fi
 
 # check the target folder
-target_folder="$project_root/unpacked"
+target_folder="$ROOTFS_DIR"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
   exit 4

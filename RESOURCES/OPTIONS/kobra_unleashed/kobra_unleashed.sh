@@ -1,12 +1,9 @@
 #!/bin/bash
 
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # default urls to be replaced
 mqtt_urls="mqtt-universe-test.anycubic.com mqtt-universe.anycubic.com mqtt-test.anycubic.com mqtt.anycubic.com"
+
+project_root="$1"
 
 # check the parameters
 if [ $# != 2 ]; then
@@ -14,19 +11,18 @@ if [ $# != 2 ]; then
   exit 1
 fi
 
-def_target="$1/unpacked/squashfs-root/app/app"
+def_target="$ROOTFS_DIR/app/app"
+
 def_url="$2"
 
 # check the required tools
-TOOL_LIST="printf dd grep awk"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-    exit 1
-  fi
-done
+check_tools "printf dd grep awk"
+
+# check the project root folder
+if [ ! -d "$project_root" ]; then
+  echo -e "${RED}ERROR: Cannot find the folder '$project_root' ${NC}"
+  exit 3
+fi
 
 # check the input file
 if [ ! -f "$def_target" ]; then

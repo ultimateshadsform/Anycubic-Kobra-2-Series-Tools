@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
     echo "usage : $0 <project_root>"
@@ -15,15 +9,7 @@ fi
 project_root="$1"
 
 # check the required tools
-TOOL_LIST="rm"
-for tool_name in $TOOL_LIST; do
-    echo "Checking tool: $tool_name"
-    tool_path=$(which "$tool_name")
-    if [ -z "$tool_path" ]; then
-        echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-        exit 1
-    fi
-done
+check_tools "rm"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then
@@ -52,18 +38,18 @@ folders=(
 # Remove the folders and files
 # Check if folder or file and remove it
 for folder in "${folders[@]}"; do
-    if [ -d "$project_root/unpacked/squashfs-root/$folder" ]; then
-        echo "Removing folder: $project_root/unpacked/squashfs-root/$folder"
-        rm -rf "$project_root/unpacked/squashfs-root/$folder"
+    if [ -d "$ROOTFS_DIR/$folder" ]; then
+        echo "Removing folder: $ROOTFS_DIR/$folder"
+        rm -rf "$ROOTFS_DIR/$folder"
         if [ $? -ne 0 ]; then
-            echo -e "${RED}ERROR: Failed to remove folder: $project_root/unpacked/squashfs-root/$folder ${NC}"
+            echo -e "${RED}ERROR: Failed to remove folder: $ROOTFS_DIR/$folder ${NC}"
             exit 3
         fi
-    elif [ -f "$project_root/unpacked/squashfs-root/$folder" ]; then
-        echo "Removing file: $project_root/unpacked/squashfs-root/$folder"
-        rm -f "$project_root/unpacked/squashfs-root/$folder"
+    elif [ -f "$ROOTFS_DIR/$folder" ]; then
+        echo "Removing file: $ROOTFS_DIR/$folder"
+        rm -f "$ROOTFS_DIR/$folder"
         if [ $? -ne 0 ]; then
-            echo -e "${RED}ERROR: Failed to remove file: $project_root/unpacked/squashfs-root/$folder ${NC}"
+            echo -e "${RED}ERROR: Failed to remove file: $ROOTFS_DIR/$folder ${NC}"
             exit 3
         fi
     fi
