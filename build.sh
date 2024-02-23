@@ -18,10 +18,12 @@ if [ -z "$all_files" ]; then
     read -p "No firmware files found in the FW folder. Do you want to download the firmware? (y/n) " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo
+        read -p "Enter version: " par_version
+        read -p "Enter model: " par_model
         echo "Downloading firmware..."
         #  Run fwdl.sh with the model and version as parameters
         $project_root/fwdl.sh $par_model $par_version
-
+        all_files=$(ls $FW_DIR | grep -E ".zip|.bin|.swu")
     else
         echo
         echo "Please download the firmware and place it in the FW folder"
