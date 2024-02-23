@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
+project_root="$PWD"
+
+# Source the utils.sh file
+source "$project_root/TOOLS/helpers/utils.sh" "$project_root"
 
 # the result of installed options log
 installed_options="installed_options.log"
@@ -12,17 +12,7 @@ installed_options="installed_options.log"
 FILES="sw-description sw-description.sig boot-resource uboot boot0 kernel rootfs dsp0 cpio_item_md5"
 
 # check the required tools
-TOOL_LIST="grep md5sum openssl wc awk sha256sum mksquashfs python3 auto_install.py"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    if [ ! -f "TOOLS/$tool_name" ]; then
-      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-      exit 3
-    fi
-  fi
-done
+check_tools "grep md5sum openssl wc awk sha256sum mksquashfs python3 auto_install.py"
 
 # set the custom auto update tool
 AUTO_UPDATE_TOOL=$(which "auto_install.py")

@@ -40,10 +40,12 @@ check_tools() {
             export $tool_name_var=$tool_path_var
         else
             tool_path=$(which $tool_name)
-        fi
-        if [ -z "$tool_path" ]; then
-            echo -e "${RED}ERROR: Cannot find the tool '$tool_name' ${NC}"
-            exit 2
+            if [ -z "$tool_path" ]; then
+                if [ ! -f "$TOOLS_DIR/$tool_name" ]; then
+                    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
+                    exit 3
+                fi
+            fi
         fi
     done
 

@@ -43,7 +43,7 @@ for option in $options; do
   # replace the project root requests
   parameters="${parameters/@/"$project_root"}"
   # execute the script
-  opt_script="${project_root}/RESOURCES/OPTIONS/${option}/${option}.sh"
+  opt_script="${OPTIONS_DIR}/${option}/${option}.sh"
   if [ ! -f "$opt_script" ]; then
     echo -e "${RED}ERROR: Cannot find the file '$opt_script' ${NC}"
     exit 3
