@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <settings>"
@@ -17,25 +12,8 @@ settings="$2"
 # check the required tools
 app_version_tool=$(which app_version.sh)
 app_model_tool=$(which app_model.sh)
-TOOL_LIST="app_version.sh app_model.sh cut dd"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    local_tool_path="$project_root/TOOLS/$tool_name"
-    if [ ! -f "$local_tool_path" ]; then
-      echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-      exit 2
-    else
-      if [ "$tool_name" == "app_version.sh" ]; then
-        app_version_tool="$local_tool_path"
-      fi
-      if [ "$tool_name" == "app_model.sh" ]; then
-        app_model_tool="$local_tool_path"
-      fi
-    fi
-  fi
-done
+
+check_tools "app_version.sh app_model.sh cut dd"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then

@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <image_set>"
@@ -21,14 +16,14 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the image_set folder
-image_set_folder="$project_root/RESOURCES/OPTIONS/app_images/$image_set"
+image_set_folder="$OPTIONS_DIR/app_images/$image_set"
 if [ ! -d "$image_set_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the folder '$image_set_folder' ${NC}"
   exit 3
 fi
 
 # check the target folder
-target_folder="$project_root/unpacked/squashfs-root/app/resources/images"
+target_folder="$ROOTFS_DIR/app/resources/images"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
   exit 4

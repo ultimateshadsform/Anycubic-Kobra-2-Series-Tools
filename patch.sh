@@ -1,17 +1,15 @@
 #!/bin/bash
 
+project_root="$PWD"
+
+# Source the utils.sh file
+source "$project_root/RESOURCES/helpers/utils.sh" "$project_root"
+
 # the default options file
 optionsfile="options.cfg"
 
 # the result of installed options log
 installed_options="installed_options.log"
-
-# global definitions:
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-PURPLE='\033[0;35m'
-NC='\033[0m'
-project_root="$PWD"
 
 # check the parameters for a custom options file
 if [ $# == 1 ]; then
@@ -27,16 +25,10 @@ if [ ! -f "$optionsfile" ]; then
   exit 1
 fi
 
-# check the required tools
-TOOL_LIST="awk head sed"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-    exit 1
-  fi
-done
+check_tools "awk head sed"
+
+export project_root ROOTFS_DIR OPTIONS_DIR KEYS_DIR FW_DIR TEMP_DIR
+export -f check_tools
 
 # remove the old result file for the installed options
 rm -f "$installed_options"

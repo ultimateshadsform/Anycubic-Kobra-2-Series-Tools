@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# global definitions:
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-GREEN='\033[0;32m'
-NC='\033[0m'
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <dns_replacement>"
@@ -16,15 +10,7 @@ project_root="$1"
 dns_replacement="$2"
 
 # check the required tools
-TOOL_LIST="printf dd grep cut xargs"
-for tool_name in $TOOL_LIST; do
-  echo "Checking tool: $tool_name"
-  tool_path=$(which "$tool_name")
-  if [ -z "$tool_path" ]; then
-    echo -e "${RED}ERROR: Missing tool '$tool_name' ${NC}"
-    exit 1
-  fi
-done
+check_tools "printf dd grep cut xargs"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then
@@ -33,7 +19,7 @@ if [ ! -d "$project_root" ]; then
 fi
 
 # check the target file
-def_target="$project_root/unpacked/squashfs-root/app/app"
+def_target="$ROOTFS_DIR/app/app"
 if [ ! -f "$def_target" ]; then
   echo -e "${RED}ERROR: Cannot find the target file '$def_target' ${NC}"
   exit 3

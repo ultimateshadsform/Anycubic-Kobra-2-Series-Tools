@@ -56,7 +56,7 @@ if __name__ == "__main__":
     ssh = paramiko.SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(printer_settings.ip, port=printer_settings.port, username=printer_settings.username, password=getpass.getpass())
+    ssh.connect(printer_settings.ip, port=printer_settings.port, username=printer_settings.username, password=getpass.getpass(), timeout=5)
 
     print('Connected to the printer')
 
@@ -85,10 +85,19 @@ if __name__ == "__main__":
 
             # If current_boot_partition is bootA, run swupdate with bootB. example: now_A_next_B
             boot_partition = "now_A_next_B" if current_boot_partition == "bootA" else "now_B_next_A"
-            ssh.exec_command(f'swupdate_cmd.sh -i /mnt/UDISK/update.swu -e stable,{boot_partition} -k /etc/swupdate_public.pem')
+            ssh.exec_command(f'swupdate_cmd.sh -i /mnt/UDISK/update.swu -e stable,{boot_partition} -k /etc/swupdate_public.pem &')
             print("Update started... Please wait for the printer to reboot")
             # wait for the update to complete, the printer to reboot and then close the connection
-            time.sleep(60)
+            # Count down from 60 seconds
+            for i in range(60, 0, -1):
+                print(f'{i} seconds remaining')
+                # Check if we have lost ssh connection
+                if ssh.get_transport().is_active() == False:
+                    print('Connection lost... Printer is probably rebooting')
+                    ssh.close()
+                    print('Connection closed')
+                    break
+                time.sleep(1)
             break
         else:
             # Delete the file and try again

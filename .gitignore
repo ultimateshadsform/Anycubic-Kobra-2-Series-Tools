@@ -4,4 +4,5 @@ FW/*.swu
 FW/*.zip
 unpacked/*
 installed_options.log
+auto_install.cfg
 printer*.cfg
