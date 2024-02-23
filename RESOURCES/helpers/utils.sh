@@ -49,3 +49,6 @@ check_tools() {
 
     echo -e "${GREEN}SUCCESS: All tools are available${NC}"
 }
+
+export -f check_tools
+export RED GREEN YELLOW PURPLE NC FW_DIR OPTIONS_DIR KEYS_DIR TEMP_DIR TOOLS_DIR ROOTFS_DIR

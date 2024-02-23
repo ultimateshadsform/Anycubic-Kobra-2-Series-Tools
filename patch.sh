@@ -27,9 +27,6 @@ fi
 
 check_tools "awk head sed"
 
-export project_root ROOTFS_DIR OPTIONS_DIR KEYS_DIR FW_DIR TEMP_DIR
-export -f check_tools
-
 # remove the old result file for the installed options
 rm -f "$installed_options"
 
