@@ -2,6 +2,8 @@
 
 # global definitions:
 RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -49,12 +51,15 @@ dns_url="udp://$old_dns:53"
 results=$(grep --binary-files=text -b -o "$dns_url" "$def_target" | xargs echo -n)
 if [ -z "$results" ]; then
   echo -e "${RED}ERROR: The 'app' might be already patched. Cannot find the expected DNS '$dns_url' ${NC}"
-  exit 5
+  echo -e "${YELLOW}INFO: Will not patch the 'app' file...${NC}"
+  exit 0
 fi
 # replace all found old DNS with the new one
 for result in $results; do
   offset=$(echo -n "$result" | awk -F: '{print $1}')
   printf "udp://%s:53\x00" "$new_dns" | dd of="$def_target" bs=1 seek="$offset" conv=notrunc &>>/dev/null
 done
+
+echo -e "${GREEN}SUCCESS: The 'app' has been patched with the new DNS '$new_dns' ${NC}"
 
 exit 0

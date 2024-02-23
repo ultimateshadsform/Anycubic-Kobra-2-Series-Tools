@@ -1,6 +1,8 @@
 #!/bin/bash
 
 RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # default urls to be replaced
@@ -38,7 +40,8 @@ for url in $mqtt_urls; do
   grep "$mqtt_url" "$def_target" &>>/dev/null
   if [ $? -ne 0 ]; then
     echo -e "${RED}ERROR: The 'app' might be already patched. Cannot find the expected URL '$mqtt_url' ${NC}"
-    exit 3
+    echo -e "${YELLOW}INFO: Will not patch the 'app' file...${NC}"
+    exit 0
   fi
 done
 
@@ -52,5 +55,7 @@ for url in $mqtt_urls; do
   fi
   printf "mqtts://%s:8883\x00" "$def_url" | dd of="$def_target" bs=1 seek="$offset" conv=notrunc &>>/dev/null
 done
+
+echo -e "${GREEN}INFO: The 'app' file has been successfully patched with the custom MQTT URL ${NC}"
 
 exit 0

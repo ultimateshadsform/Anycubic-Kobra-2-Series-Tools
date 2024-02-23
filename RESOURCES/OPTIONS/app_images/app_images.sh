@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -35,5 +36,7 @@ fi
 
 # copy the selected image set to the target
 /bin/cp -rf "$image_set_folder" "$target_folder"
+
+echo -e "${GREEN}SUCCESS: The '$image_set' image set has been copied to the target folder ${NC}"
 
 exit 0

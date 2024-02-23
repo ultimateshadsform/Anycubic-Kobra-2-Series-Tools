@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -42,5 +43,7 @@ fi
 
 # copy the selected boot resource to the target
 /bin/cp -f "$boot_resource_file" "$target_folder"
+
+echo -e "${GREEN}SUCCESS: The '$boot_resource' boot resource has been copied to the target folder ${NC}"
 
 exit 0

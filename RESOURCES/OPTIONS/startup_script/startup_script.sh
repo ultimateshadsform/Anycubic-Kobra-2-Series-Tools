@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -51,5 +52,7 @@ cp -rf "$project_root/RESOURCES/OPTIONS/startup_script/$startup_script" "$projec
 
 # Add /etc/$startup_script to $project_root/unpacked/squashfs-root/etc/rc.local before the exit 0 line
 sed -i "/exit 0/i /etc/$startup_script" "$project_root/unpacked/squashfs-root/etc/rc.local"
+
+echo -e "${GREEN}INFO: Startup script '$startup_script' has been installed ${NC}"
 
 exit 0

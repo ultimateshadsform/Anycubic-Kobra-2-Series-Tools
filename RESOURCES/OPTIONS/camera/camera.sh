@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -106,16 +107,19 @@ if [ "$app_ver" == "3.0.9" ]; then
   if [ "$app_model" == "K2Pro" ]; then
     # stop the app to log the message 'cannot open video'
     printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339112 conv=notrunc
+    echo -e "${GREEN}SUCCESS: The 'app' has been patched to support the webcam package (K2Pro) ${NC}"
     exit 0
   fi
   if [ "$app_model" == "K2Plus" ]; then
     # stop the app to log the message 'cannot open video'
     printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc
+    echo -e "${GREEN}SUCCESS: The 'app' has been patched to support the webcam package (K2Plus) ${NC}"
     exit 0
   fi
   if [ "$app_model" == "K2Max" ]; then
     # stop the app to log the message 'cannot open video'
     printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2339152 conv=notrunc
+    echo -e "${GREEN}SUCCESS: The 'app' has been patched to support the webcam package (K2Max) ${NC}"
     exit 0
   fi
 fi

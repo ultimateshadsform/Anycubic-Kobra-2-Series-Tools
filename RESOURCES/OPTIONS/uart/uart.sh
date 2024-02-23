@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -56,5 +57,7 @@ current_folder="$PWD"
 cd "$target_folder" || exit 7
 unzip -o "$uart_package_file"
 cd "$current_folder" || exit 8
+
+echo -e "${GREEN}INFO: The UART package has been installed. Version: $uart_package ${NC}"
 
 exit 0

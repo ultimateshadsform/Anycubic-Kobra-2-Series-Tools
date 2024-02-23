@@ -9,6 +9,7 @@ installed_options="installed_options.log"
 # global definitions:
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+PURPLE='\033[0;35m'
 NC='\033[0m'
 project_root="$PWD"
 
@@ -45,7 +46,7 @@ options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! 
 
 # for each enabled option
 for option in $options; do
-  echo "Processing option '$option' ..."
+  echo -e "${PURPLE}Processing option '$option' ...${NC}"
   # parse the parameters (only from the first found option)
   # duplicated options are not supported, if needed use list of parameters for the same option:
   # startup_script="script1.sh" "script2.sh" "script3.sh"

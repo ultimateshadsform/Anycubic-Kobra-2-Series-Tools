@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -40,5 +41,7 @@ fi
 # enable root access by providing known root password hash
 shadow_temp="${target_file}_temp"
 awk "BEGIN{FS=\":\"; OFS=FS} \$1==\"root\"{\$2=\"$password_hash\"} {print}" "$target_file" >"$shadow_temp" && mv "$shadow_temp" "$target_file"
+
+echo -e "${GREEN}Root access enabled${NC}"
 
 exit 0

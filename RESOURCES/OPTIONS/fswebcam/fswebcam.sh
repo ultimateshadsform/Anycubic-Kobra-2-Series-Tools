@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -58,5 +59,7 @@ unzip -o "$fswebcam_package_file"
 # extend the PATH to $project_root/unpacked/squashfs-root/etc/profile
 sed -i 's#export PATH="/usr/sbin:/usr/bin:/sbin:/bin"#export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/opt/sbin:/opt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"#' "$project_root/unpacked/squashfs-root/etc/profile"
 cd "$current_folder" || exit 8
+
+echo -e "${GREEN}SUCCESS: The '$fswebcam_package' fswebcam package has been enabled ${NC}"
 
 exit 0

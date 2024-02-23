@@ -2,6 +2,7 @@
 
 # global definitions:
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m'
 
 # check the parameters
@@ -77,5 +78,7 @@ while read -r line; do
   settings_addr=$(echo -n "$line" | cut -d "@" -f 2)
   printf "$settings_data" | dd of="$def_target" bs=1 seek="$settings_addr" conv=notrunc
 done <"$settings_file"
+
+echo -e "${GREEN}SUCCESS: The 'app_net_ready' settings have been applied ${NC}"
 
 exit 0
