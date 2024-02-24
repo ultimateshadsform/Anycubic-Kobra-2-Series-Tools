@@ -38,13 +38,15 @@ if [ ! -f "$boot0_file" ]; then
 fi
 
 # check the target folder
-target_folder="$ROOTFS_DIR"
+target_folder="$project_root/unpacked"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
   exit 7
 fi
 
 echo -e "${YELLOW}INFO: Copying the uart files ...${NC}"
+
+echo -e "${YELLOW}INFO: Copying the uart files to $target_folder ...${NC}"
 
 # Copy the uart files to the target folder
 cp -f "$uboot_file" "$target_folder"
