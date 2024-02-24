@@ -24,14 +24,11 @@ fi
 folders=(
     "etc/bluetooth"
     "etc/dbus-1/system.d/bluetooth*.conf"
-    "lib/bluetooth"
     "lib/upgrade/keep.d/bluez-daemon"
     "usr/bin/bccmd"
     "usr/bin/bdaddr"
     "usr/bin/blue*"
     "usr/bin/bt*"
-    "usr/lib/alsa-lib"
-    "usr/lib/libbluetooth*"
     "usr/share/alsa/alsa.conf.d/20-bluealsa.conf"
 )
 
