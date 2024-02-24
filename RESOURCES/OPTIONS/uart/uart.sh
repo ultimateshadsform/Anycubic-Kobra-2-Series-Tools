@@ -70,7 +70,7 @@ echo -e "${GREEN}INFO: The boot0 file has been copied${NC}"
 # Overwrite the inittab file
 echo -e "${YELLOW}INFO: Overwriting the inittab file ...${NC}"
 
-cat <<EOF >"$target_folder/etc/inittab"
+cat <<EOF >"$ROOTFS_DIR/etc/inittab"
 ::sysinit:/etc/init.d/rcS S boot
 ::shutdown:/etc/init.d/rcS K shutdown
 ::askconsole:/bin/ash --login
