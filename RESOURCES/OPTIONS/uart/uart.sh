@@ -6,7 +6,7 @@ if [ $# != 2 ]; then
   exit 1
 fi
 
-check_tools "cp"
+check_tools "unzip"
 
 project_root="$1"
 uart_package="$2"
@@ -24,48 +24,31 @@ if [ ! -d "$uart_package_folder" ]; then
   exit 4
 fi
 
-# check the uart files uboot and boot0
-uboot_file="${uart_package_folder}/uboot"
-if [ ! -f "$uboot_file" ]; then
-  echo -e "${RED}ERROR: Cannot find the file '$uboot_file' ${NC}"
+# check the uart package file exists uart.zip or package
+uart_zip_file="${uart_package_folder}/uart.zip"
+if [ ! -f "$uart_zip_file" ]; then
+  echo -e "${RED}ERROR: Cannot find the file '$uart_zip_file' ${NC}"
   exit 5
-fi
-
-boot0_file="${uart_package_folder}/boot0"
-if [ ! -f "$boot0_file" ]; then
-  echo -e "${RED}ERROR: Cannot find the file '$boot0_file' ${NC}"
-  exit 6
 fi
 
 # check the target folder
 target_folder="$project_root/unpacked"
 if [ ! -d "$target_folder" ]; then
   echo -e "${RED}ERROR: Cannot find the target folder '$target_folder' ${NC}"
-  exit 7
+  exit 6
 fi
 
 echo -e "${YELLOW}INFO: Copying the uart files ...${NC}"
-
 echo -e "${YELLOW}INFO: Copying the uart files to $target_folder ...${NC}"
 
-# Copy the uart files to the target folder
-cp -f "$uboot_file" "$target_folder"
+# Unzip the uart package into the target folder
+unzip -oqq "$uart_zip_file" -d "$target_folder"
 
-if [ $? != 0 ]; then
-  echo -e "${RED}ERROR: Failed to copy the uboot file ${NC}"
-  exit 8
+# Check if unzip succeeded
+if [ $? -ne 0 ]; then
+  echo -e "${RED}ERROR: Failed to unzip the uart package ${NC}"
+  exit 7
 fi
-
-echo -e "${GREEN}INFO: The uboot file has been copied${NC}"
-
-cp -f "$boot0_file" "$target_folder"
-
-if [ $? != 0 ]; then
-  echo -e "${RED}ERROR: Failed to copy the boot0 file ${NC}"
-  exit 9
-fi
-
-echo -e "${GREEN}INFO: The boot0 file has been copied${NC}"
 
 # Overwrite the inittab file
 echo -e "${YELLOW}INFO: Overwriting the inittab file ...${NC}"
