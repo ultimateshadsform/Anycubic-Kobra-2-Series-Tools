@@ -1,10 +1,17 @@
 #!/bin/bash
 
+project_root="$PWD"
+
+# Source the utils.sh file
+source "$project_root/TOOLS/helpers/utils.sh" "$project_root"
+
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <uart_package>"
   exit 1
 fi
+
+check_tools "cp"
 
 project_root="$1"
 uart_package="$2"
@@ -45,7 +52,7 @@ fi
 echo -e "${YELLOW}INFO: Copying the uart files ...${NC}"
 
 # Copy the uart files to the target folder
-/bin/cp -f "$uboot_file" "$target_folder"
+cp -f "$uboot_file" "$target_folder"
 
 if [ $? != 0 ]; then
   echo -e "${RED}ERROR: Failed to copy the uboot file ${NC}"
@@ -54,7 +61,7 @@ fi
 
 echo -e "${GREEN}INFO: The uboot file has been copied${NC}"
 
-/bin/cp -f "$boot0_file" "$target_folder"
+cp -f "$boot0_file" "$target_folder"
 
 if [ $? != 0 ]; then
   echo -e "${RED}ERROR: Failed to copy the boot0 file ${NC}"
