@@ -1,10 +1,5 @@
 #!/bin/bash
 
-project_root="$PWD"
-
-# Source the utils.sh file
-source "$project_root/TOOLS/helpers/utils.sh" "$project_root"
-
 # check the parameters
 if [ $# != 2 ]; then
   echo "usage : $0 <project_root> <uart_package>"
