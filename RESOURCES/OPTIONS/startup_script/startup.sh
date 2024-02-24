@@ -52,6 +52,7 @@ ln -s /opt/etc/ssl/certs /etc/ssl >/dev/null 2>&1
 cp -rp /etc/ssl/certs/{ca.crt,client.crt,client.key,server.crt,server.key} /user
 
 # If mosquitto is not running then start it
-if ! ps | grep -q mosquitto; then
+# Don't grep mosquitto from the ps output
+if ! ps | grep -r "mosquitto -c /opt/etc/mosquitto/mosquitto.conf" | grep -v grep; then
     /opt/etc/init.d/S80mosquitto start
 fi
