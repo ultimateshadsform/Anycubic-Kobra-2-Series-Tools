@@ -35,24 +35,10 @@ folders=(
     "usr/share/alsa/alsa.conf.d/20-bluealsa.conf"
 )
 
-# Remove the folders and files
-# Check if folder or file and remove it
+# Remove everything in the array using -rf
 for folder in "${folders[@]}"; do
-    if [ -d "$ROOTFS_DIR/$folder" ]; then
-        echo "Removing folder: $ROOTFS_DIR/$folder"
-        rm -rf "$ROOTFS_DIR/$folder"
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}ERROR: Failed to remove folder: $ROOTFS_DIR/$folder ${NC}"
-            exit 3
-        fi
-    elif [ -f "$ROOTFS_DIR/$folder" ]; then
-        echo "Removing file: $ROOTFS_DIR/$folder"
-        rm -f "$ROOTFS_DIR/$folder"
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}ERROR: Failed to remove file: $ROOTFS_DIR/$folder ${NC}"
-            exit 3
-        fi
-    fi
+    echo -e "${YELLOW}INFO: Removing the $ROOTFS_DIR/$folder ...${NC}"
+    rm -rf $ROOTFS_DIR/$folder
 done
 
-echo -e "${GREEN}SUCCESS: The 'bluetooth' has been removed ${NC}"
+echo -e "${GREEN}INFO: The bluetooth option has been removed${NC}"
