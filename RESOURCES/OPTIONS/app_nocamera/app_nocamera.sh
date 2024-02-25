@@ -44,6 +44,30 @@ fi
 
 # patch the app based on the model and the version
 
+if [ "$app_ver" == "3.0.5" ]; then
+
+  # stop the app for looking for inserted webcam
+  sed -i 's/video4linux/videoXlinux/g' "$def_target"
+  if [ "$app_model" == "K2Pro" ]; then
+    # stop the app to log the message 'cannot open video'
+    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2338704 conv=notrunc
+    echo -e "${GREEN}SUCCESS: The 'app' has been patched to stop supporting cameras (K2Pro) ${NC}"
+    exit 0
+  fi
+  if [ "$app_model" == "K2Plus" ]; then
+    # stop the app to log the message 'cannot open video'
+    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2338744 conv=notrunc
+    echo -e "${GREEN}SUCCESS: The 'app' has been patched to stop supporting cameras (K2Plus) ${NC}"
+    exit 0
+  fi
+  if [ "$app_model" == "K2Max" ]; then
+    # stop the app to log the message 'cannot open video'
+    printf "\x00\xf0\x20\xe3" | dd of="$def_target" bs=1 seek=2338744 conv=notrunc
+    echo -e "${GREEN}SUCCESS: The 'app' has been patched to stop supporting cameras (K2Max) ${NC}"
+    exit 0
+  fi
+fi
+
 if [ "$app_ver" == "3.0.9" ]; then
 
   # stop the app for looking for inserted webcam
@@ -68,6 +92,6 @@ if [ "$app_ver" == "3.0.9" ]; then
   fi
 fi
 
-echo -e "${RED}ERROR: Unsupported model and version! It requires K2Pro/K2Plus/K2Max with version 3.0.9+ ${NC}"
+echo -e "${RED}ERROR: Unsupported model and version! It requires K2Pro/K2Plus/K2Max with version 3.0.5+ ${NC}"
 
 exit 11
