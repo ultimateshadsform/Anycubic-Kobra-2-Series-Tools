@@ -29,7 +29,7 @@ mkdir update
 cd unpacked || exit 2
 
 # Ask if the user wants to keep existing rootfs
-read -r -p "Do you want to keep the existing rootfs? [y/N] " response
+read -r -p "Do you want to keep the existing rootfs? (Only for dev testing. Answer NO.) [y/N] " response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   echo -e "${YELLOW}Keeping the existing rootfs${NC}"
 else
