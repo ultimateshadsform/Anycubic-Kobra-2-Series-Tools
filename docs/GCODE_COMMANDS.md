@@ -18,3 +18,4 @@ The `root` command enabled these commands. And `unroot` disables them.
 - M8817 - Copy printer.cfg from USB to /app/resources/configs/printer.cfg.
 - M8818 - Copy unmodifiable.cfg from USB.
 - M8820 - Resets the printer to factory settings.
+- UNROOT - Disable root commands.
