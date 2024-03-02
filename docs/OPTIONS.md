@@ -13,7 +13,7 @@ banner
 #doc wip
 
 bluetooth
-#doc wip
+This option disable internal bluetooth module, it is not needed if you use these custom tools only for 3.0.9
 
 boot_resources 
 #doc wip
@@ -24,26 +24,20 @@ camera
 custom_updates
 #doc wip
 
-fswebcam
-#doc wip
-
 okpg
 #doc wip
 
-python
-#doc wip
-
 root_access
-#doc wip
+This option enble root access, default password is toor. 
 
 ssh
-#doc wip
+This option install and configure SSH Dropbear client.
 
 startup_client
 #doc wip
 
 uart
-#doc wip
+This option enable UART on firmware 3.x and up 
 
 webserver
 #doc wip
