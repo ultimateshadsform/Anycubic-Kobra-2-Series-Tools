@@ -10,9 +10,6 @@ project_root="$1"
 settings="$2"
 
 # check the required tools
-app_version_tool=$(which app_version.sh)
-app_model_tool=$(which app_model.sh)
-
 check_tools "app_version.sh app_model.sh cut dd"
 
 # check the project root folder
