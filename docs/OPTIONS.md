@@ -1,6 +1,4 @@
-In this file is documented what each option does, dependencies, well know bugs, under development or abandoned. 
-
-
+In this file is documented what each option does. 
 
 
 app_images
@@ -12,32 +10,32 @@ app_net_ready
 banner 
 #doc wip
 
-bluetooth
+BLUETOOTH 
 This option disable internal bluetooth module, it is not needed if you use these custom tools only for 3.0.9
 
-boot_resources 
+BOOT_RESOURCES
 #doc wip
 
-camera
+CAMERA
 #doc wip
 
-custom_updates
-#doc wip
+CUSTOM_UPDATES
+Enable custom updates by replacing public key of the printer, remeber to save the original Key in case you want go back to OTA updates.  
 
-okpg
-#doc wip
+OKPG
+install okpg package manager.
 
-root_access
+ROOT_ACCESS
 This option enble root access, default password is toor. 
 
-ssh
+SSH
 This option install and configure SSH Dropbear client.
 
-startup_client
-#doc wip
+STARTUP_CLIENT
+This script is configured to initiate the automatic execution of other scripts or settings at system boot. 
 
-uart
-This option enable UART on firmware 3.x and up 
+UART
+This option enable UART on firmware 3.x and up.
 
-webserver
-#doc wip
+WEBSERVER 
+Low memory footprint internal webserver, the project is under development and it include various tools like bed mesh visualization in real time and also a control panel to fine tuning mesh data using an algorithm that calculates the average mesh data, save mesh data history, webcam streaming and more to come. 
