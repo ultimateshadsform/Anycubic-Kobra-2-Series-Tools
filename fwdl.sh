@@ -11,12 +11,17 @@ if [ $# != 2 ]; then
   echo "example: $0 K2Pro 3.0.9"
   echo "example: $0 K2Plus \"3.0.0 3.0.5 3.0.9\""
   echo "example: $0 K2Max all"
+  echo "example: $0 K2Pro latest"
   echo "example: $0 all all"
   exit 1
 fi
 
 par_models="$1"
 par_versions="$2"
+
+if [ "$par_versions" = "latest" ] || [ "$par_versions" = "LATEST" ] || [ "$par_versions" = "last" ] || [ "$par_versions" = "LAST" ]; then
+  par_versions=$(curl -s "https://raw.githubusercontent.com/AGG2017/ACK2-Webserver/master/latest_version.txt")
+fi
 
 if [ "$par_versions" = "all" ] || [ "$par_versions" = "ALL" ]; then
   par_versions="2.3.9 3.0.3 3.0.5 3.0.9"
@@ -38,7 +43,7 @@ for par_model in $par_models; do
   fi
 
   for par_version in $par_versions; do
-    echo -e "${BROWN}Processing model $par_model version $par_version ...${NC}"
+    echo -e "${YELLOW}Processing model $par_model version $par_version ...${NC}"
     url_bin="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/AC104_${par_model}_1.1.0_${par_version}_update.bin"
     file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
     rm -f "$file_bin"
