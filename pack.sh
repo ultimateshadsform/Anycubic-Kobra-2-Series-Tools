@@ -28,15 +28,9 @@ mkdir update
 # pack the squashfs-root folder
 cd unpacked || exit 2
 
-# Ask if the user wants to keep existing rootfs
-read -r -p "Do you want to keep the existing rootfs? (Only for dev testing. Answer NO.) [y/N] " response
-if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  echo -e "${YELLOW}Keeping the existing rootfs${NC}"
-else
-  echo -e "${YELLOW}Deleting the existing rootfs${NC}"
-  rm -rf rootfs
-  mksquashfs squashfs-root rootfs -comp xz -all-root
-fi
+echo -e "${YELLOW}Deleting the existing rootfs${NC}"
+rm -rf rootfs
+mksquashfs squashfs-root rootfs -comp xz -all-root
 
 # check if the updated rootfs can fit in the partitions rootfsA/B
 file_size=$(wc -c rootfs | awk '{print $1}')
