@@ -213,13 +213,12 @@ Need more info on what this does
   "type": "print",
   "action": "update",
   "data": {
-    "taskid": "<taskid>",
+    "taskid": "0",
     "settings": {
-      "target_nozzle_temp": "<target_nozzle_temp>",
-      "target_hotbed_temp": "<target_hotbed_temp>",
-      "fan_speed_pct": "<fan_speed_pct>",
-      "print_speed_mode": "<print_speed_mode>",
-      "z_comp": "<z_comp>"
+      "target_nozzle_temp": 60,
+      "target_hotbed_temp": 60,
+      "fan_speed_pct": 100,
+      "print_speed_mode": 2
     }
   }
 }
