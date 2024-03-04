@@ -218,7 +218,8 @@ Need more info on what this does
       "target_nozzle_temp": 60,
       "target_hotbed_temp": 60,
       "fan_speed_pct": 100,
-      "print_speed_mode": 2
+      "print_speed_mode": 2,
+      "z_comp": "<z_comp>"
     }
   }
 }
