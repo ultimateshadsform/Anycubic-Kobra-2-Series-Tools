@@ -1,1 +1,1 @@
-Place .bin firmwares in the FW directory.
+Place .bin, .zip, .swu firmwares in this folder.
