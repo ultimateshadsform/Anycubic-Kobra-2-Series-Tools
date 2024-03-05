@@ -9,7 +9,7 @@ source "$project_root/TOOLS/helpers/utils.sh" "$project_root"
 if [ $# != 2 ]; then
   echo "usage  : $0 <model> <version>"
   echo "example: $0 K2Pro 3.0.9"
-  echo "example: $0 K2Plus \"3.0.0 3.0.5 3.0.9\""
+  echo "example: $0 K2Plus \"3.0.0 3.0.5 3.0.9 3.1.0\""
   echo "example: $0 K2Max all"
   echo "example: $0 K2Pro latest"
   echo "example: $0 all all"
@@ -24,7 +24,7 @@ if [ "$par_versions" = "latest" ] || [ "$par_versions" = "LATEST" ] || [ "$par_v
 fi
 
 if [ "$par_versions" = "all" ] || [ "$par_versions" = "ALL" ]; then
-  par_versions="2.3.9 3.0.3 3.0.5 3.0.9"
+  par_versions="2.3.9 3.0.3 3.0.5 3.0.9 3.1.0"
 fi
 
 if [ "$par_models" = "all" ] || [ "$par_models" = "ALL" ]; then
@@ -44,26 +44,54 @@ for par_model in $par_models; do
 
   for par_version in $par_versions; do
     echo -e "${YELLOW}Processing model $par_model version $par_version ...${NC}"
-    url_bin="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/AC104_${par_model}_1.1.0_${par_version}_update.bin"
-    file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
-    rm -f "$file_bin"
-    curl "$url_bin" --output "$file_bin"
-    result=$(grep "<Error><Code>NoSuchKey</Code>" "$file_bin")
-    file_size=$(wc -c "$file_bin" | awk '{print $1}')
-    if [ -n "$result" ] || [ "$file_size" -le 1000000 ]; then
+    ver_int=${par_version//./}
+    if [ "$ver_int" -le 309 ]; then
+      # old url format
+      url_bin="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/AC104_${par_model}_1.1.0_${par_version}_update.bin"
+      file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
       rm -f "$file_bin"
-      # no bin update available, try zip update
-      url_zip="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/AC104_${par_model}_1.1.0_${par_version}_update.zip"
-      file_zip="FW/AC104_${par_model}_1.1.0_${par_version}_update.zip"
-      rm -f "$file_zip"
-      curl "$url_zip" --output "$file_zip"
-      result=$(grep "<Error><Code>NoSuchKey</Code>" "$file_zip")
-      file_size=$(wc -c "$file_zip" | awk '{print $1}')
+      curl "$url_bin" --output "$file_bin"
+      result=$(grep "<Code>NoSuchKey</Code>" "$file_bin")
+      file_size=$(wc -c "$file_bin" | awk '{print $1}')
       if [ -n "$result" ] || [ "$file_size" -le 1000000 ]; then
+        rm -f "$file_bin"
+        # no bin update available, try zip update
+        url_zip="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/AC104_${par_model}_1.1.0_${par_version}_update.zip"
+        file_zip="FW/AC104_${par_model}_1.1.0_${par_version}_update.zip"
         rm -f "$file_zip"
-        # no bin and no zip update available
+        curl "$url_zip" --output "$file_zip"
+        result=$(grep "<Code>NoSuchKey</Code>" "$file_zip")
+        file_size=$(wc -c "$file_zip" | awk '{print $1}')
+        if [ -n "$result" ] || [ "$file_size" -le 1000000 ]; then
+          rm -f "$file_zip"
+          # no bin and no zip update available
+          echo -e "${RED}ERROR: Cannot find an update for this model and version ${NC}"
+          exit 3
+        fi
+      fi
+    else
+      # new url format
+      par_model_str="k2PRO"
+      par_model_id="20021"
+      if [ "$par_model" = "K2Plus" ]; then
+        par_model_str="k2PLUS"
+        par_model_id="20022"
+      fi
+      if [ "$par_model" = "K2Max" ]; then
+        par_model_str="k2MAX"
+        par_model_id="20023"
+      fi
+      url_bin="https://cdn.cloud-universe.anycubic.com/ota/prod/${par_model_id}/AC104_${par_model_str}_V${par_version}.bin"
+      file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
+      rm -f "$file_bin"
+      curl "$url_bin" --output "$file_bin"
+      result=$(grep "<Code>NoSuchKey</Code>" "$file_bin")
+      file_size=$(wc -c "$file_bin" | awk '{print $1}')
+      if [ -n "$result" ] || [ "$file_size" -le 1000000 ]; then
+        rm -f "$file_bin"
+        # no bin update available
         echo -e "${RED}ERROR: Cannot find an update for this model and version ${NC}"
-        exit 3
+        exit 4
       fi
     fi
   done
