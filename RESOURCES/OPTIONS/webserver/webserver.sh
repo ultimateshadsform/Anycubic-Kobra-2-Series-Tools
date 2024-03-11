@@ -15,7 +15,7 @@ if [ -z "$package_port" ]; then
   package_port="8000"
 fi
 
-check_tools "unzip app_version.sh app_model.sh dd printf"
+check_tools "unzip app_version.sh app_model.sh dd printf cp sed"
 
 # check the project root folder
 if [ ! -d "$project_root" ]; then
@@ -44,11 +44,39 @@ if [ ! -d "$target_folder" ]; then
   exit 5
 fi
 
+# try to find out the app version (like app_ver="309")
+def_target="$ROOTFS_DIR/app/app"
+app_ver=$("$app_version_tool" "$def_target")
+if [ $? != 0 ]; then
+  echo -e "${RED}ERROR: Cannot find the app version ${NC}"
+  exit 4
+fi
+
+# try to find out the model
+app_model=$("$app_model_tool" "$def_target")
+if [ $? != 0 ]; then
+  echo -e "${RED}ERROR: Cannot find the app model ${NC}"
+  exit 5
+fi
+
 # enable the selected webserver package
 current_folder="$PWD"
 cd "$target_folder" || exit 7
 unzip -oqq "$webserver_package_file"
 cd "$current_folder" || exit 8
+
+# copy the config file if provided or create a default one
+webserver_cfg_src="$KEYS_DIR/webserver.json"
+webserver_cfg_dst="$ROOTFS_DIR/opt/webfs/api/webserver.json"
+if [ -f "$webserver_cfg_src" ]; then
+  # config file provided
+  cp "$webserver_cfg_src" "$webserver_cfg_dst"
+  sed -i "s/@V@/$app_ver/g" "$webserver_cfg_dst"
+  sed -i "s/@M@/$app_model/g" "$webserver_cfg_dst"
+else
+  # use default config
+  echo "{\"printer_model\": \"$app_model\", \"update_version\": \"$app_ver\", \"mqtt_webui_url\": \"/\"}" >"$webserver_cfg_dst"
+fi
 
 # add "/opt/bin/webfsd -p port" to $project_root/unpacked/squashfs-root/etc/rc.local before the exit 0 line
 result=$(grep "/opt/bin/webfsd" "$target_folder/etc/rc.local")

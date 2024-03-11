@@ -1,0 +1,5 @@
+{
+"printer_model": "@M@",
+"update_version": "@V@",
+"mqtt_webui_url": "http://192.168.1.234:5000"
+}
