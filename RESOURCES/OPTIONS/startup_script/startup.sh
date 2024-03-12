@@ -51,6 +51,21 @@ ln -s /opt/etc/ssl/certs /etc/ssl >/dev/null 2>&1
 # Copy the files to /user
 cp -rp /etc/ssl/certs/{ca.crt,client.crt,client.key,server.crt,server.key} /user
 
+# echo "nameserver 127.0.0.1" >/etc/resolv.conf
+cat <<EOF >/etc/resolv.conf
+nameserver 127.0.0.1
+nameserver 1.1.1.1
+EOF
+
+URLS="myqcloud.com amazonaws.com anycubic.com anycubicloud.com"
+# echo "127.0.0.1 localhost" >/etc/hosts
+# echo "127.0.0.1 $URLS" >/etc/hosts
+
+cat <<EOF >/etc/hosts
+127.0.0.1 localhost
+127.0.0.1 $URLS
+EOF
+
 # If mosquitto is not running then start it
 # Don't grep mosquitto from the ps output
 if ! ps | grep -r "mosquitto -c /opt/etc/mosquitto/mosquitto.conf" | grep -v grep; then
