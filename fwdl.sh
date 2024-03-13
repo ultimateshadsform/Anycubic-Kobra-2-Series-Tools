@@ -13,11 +13,15 @@ if [ $# != 2 ]; then
   echo "example: $0 K2Max all"
   echo "example: $0 K2Pro latest"
   echo "example: $0 all all"
+  echo "example: $0 K2Pro scan"
   exit 1
 fi
 
 par_models="$1"
 par_versions="$2"
+
+stop_after_error=1
+downloaded=0
 
 if [ "$par_versions" = "latest" ] || [ "$par_versions" = "LATEST" ] || [ "$par_versions" = "last" ] || [ "$par_versions" = "LAST" ]; then
   par_versions=$(curl -s "https://raw.githubusercontent.com/AGG2017/ACK2-Webserver/master/latest_version.txt")
@@ -25,6 +29,32 @@ fi
 
 if [ "$par_versions" = "all" ] || [ "$par_versions" = "ALL" ]; then
   par_versions="2.3.9 3.0.3 3.0.5 3.0.9 3.1.0"
+fi
+
+if [ "$par_versions" = "scan" ] || [ "$par_versions" = "SCAN" ]; then
+  latest=$(curl -s "https://raw.githubusercontent.com/AGG2017/ACK2-Webserver/master/latest_version.txt")
+  ver_h=$(echo "$latest" | awk -F. '{print $1}')
+  ver_m=$(echo "$latest" | awk -F. '{print $2}')
+  ver_l=$(echo "$latest" | awk -F. '{print $3}')
+  par_versions=""
+  for i in {1..100}; do
+    ver_l=$((ver_l + 1))
+    if [ $ver_l -ge 10 ]; then
+      ver_l=0
+      ver_m=$((ver_m + 1))
+      if [ $ver_m -ge 10 ]; then
+        ver_m=0
+        ver_h=$((ver_h + 1))
+      fi
+    fi
+    version="${ver_h}.${ver_m}.${ver_l}"
+    if [ -z "$par_versions" ]; then
+      par_versions="${version}"
+    else
+      par_versions="${par_versions} ${version}"
+    fi
+  done
+  stop_after_error=0
 fi
 
 if [ "$par_models" = "all" ] || [ "$par_models" = "ALL" ]; then
@@ -66,7 +96,11 @@ for par_model in $par_models; do
           rm -f "$file_zip"
           # no bin and no zip update available
           echo -e "${RED}ERROR: Cannot find an update for this model and version ${NC}"
-          exit 3
+          if [ $stop_after_error -eq 1 ]; then
+            exit 3
+          fi
+        else
+          downloaded=$((downloaded + 1))
         fi
       fi
     else
@@ -91,14 +125,24 @@ for par_model in $par_models; do
         rm -f "$file_bin"
         # no bin update available
         echo -e "${RED}ERROR: Cannot find an update for this model and version ${NC}"
-        exit 4
+        if [ $stop_after_error -eq 1 ]; then
+          exit 4
+        fi
+      else
+        downloaded=$((downloaded + 1))
       fi
     fi
   done
 done
 
+if [ $downloaded -eq 0 ]; then
+  echo ""
+  echo -e "${RED}ERROR: Cannot find an update for this model ${NC}"
+  echo ""
+  exit 5
+fi
+
 echo ""
 echo -e "${GREEN}DONE! The requested firmware has been downloaded in the folder FW ${NC}"
 echo ""
-
 exit 0
