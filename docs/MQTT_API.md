@@ -10,7 +10,7 @@ To be able to send MQTT commands to the device, you need to connect and use the 
 (All commands will need to be sent here)
 
 ```
-anycubic/anycubicCloud/v1/server/printer/<PRINTER_MODEL_ID>/<PRINTER_ID>/response
+anycubic/anycubicCloud/v1/server/printer/<PRINTER_MODEL_ID>/<PRINTER_ID>/<ACTION>
 ```
 
 You can find the printer id by taking the first 32 characters of the file:
