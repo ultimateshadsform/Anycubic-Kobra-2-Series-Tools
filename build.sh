@@ -198,7 +198,10 @@ fi
 
 # Process the output file if set
 if [ -n "$build_output" ]; then
-    /bin/cp -f "$project_root/update/update.zip" "$build_output"
+    rm -f "$project_root/update.zip"
+    zip -r "$project_root/update.zip" update
+    /bin/cp -f "$project_root/update.zip" "$build_output"
+    rm -f "$project_root/update.zip"
 fi
 
 echo
