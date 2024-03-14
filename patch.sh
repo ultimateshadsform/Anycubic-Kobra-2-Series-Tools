@@ -35,6 +35,12 @@ options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! 
 
 # for each enabled option
 for option in $options; do
+
+  # skip the options build_input & build_output that are used only in build.sh
+  if [ "$option" = "build_input" ] || [ "$option" = "build_output" ]; then
+    continue
+  fi
+
   echo -e "${PURPLE}Processing option '$option' ...${NC}"
   # parse the parameters (only from the first found option)
   # duplicated options are not supported, if needed use list of parameters for the same option:

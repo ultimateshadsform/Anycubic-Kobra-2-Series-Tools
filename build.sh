@@ -93,6 +93,37 @@ elif [ $# -ge 3 ]; then
     usage
 fi
 
+# check the config file for build_input and build_output options
+build_input=""
+build_output=""
+if [ -f "$selected_config_file" ]; then
+
+    # parse the enabled options that have a set value
+    options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! ($2 == "")) print $1}' "$selected_config_file")
+
+    # for each enabled option
+    for option in $options; do
+        parameters=$(awk -F '=' "{if (! (substr(\$0,1,1) == \"#\") && ! (substr(\$0,1,1) == \";\") && ! (\$1 == \"\") && ! (\$2 == \"\") && (\$1 ~ /$option/ ) ) print \$2}" "$selected_config_file" | head -n 1)
+        # replace the project root requests
+        parameter="${parameters/@/"$project_root"}"
+        # remove the leading and ending double quotes
+        parameter=$(echo "$parameter" | sed -e 's/^"//' -e 's/"$//')
+        # remove the leading and ending single quotes
+        parameter=$(echo "$parameter" | sed -e 's/^'\''//' -e 's/'\''$//')
+        if [ "$option" = "build_input" ]; then
+            build_input="$parameter"
+        fi
+        if [ "$option" = "build_output" ]; then
+            build_output="$parameter"
+        fi
+    done
+fi
+
+if [ -z "$selected_firmware_file" ] && [ -n "$build_input" ] && [ -f "$build_input" ]; then
+    # no fw file provided but the config file has a valid fw file set, use that file
+    selected_firmware_file="$build_input"
+fi
+
 if [ -z "$selected_firmware_file" ]; then
 
     # No firmware file selected by the user: interactive mode
@@ -163,6 +194,11 @@ echo "Building firmware..."
 if [ $? -ne 0 ]; then
     echo "Failed to build firmware"
     exit 6
+fi
+
+# Process the output file if set
+if [ -n "$build_output" ]; then
+    /bin/cp -f "$project_root/update/update.zip" "$build_output"
 fi
 
 echo
