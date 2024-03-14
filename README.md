@@ -62,6 +62,8 @@ Then replace the `/etc/swupdate_public.pem` in the printer with the one from the
 
 Then apply the newly generated custom software `update/update.swu` by USB update (place the file `update.swu` in the folder `update` on the root of a FAT32 formatted USB disk). If your printer already has custom update installed, then you can directly apply the new update by USB update.
 
+To do all this a little easier you can just use `build.sh` and it will run all the steps for you.
+
 ### Notes
 
 This repository is a work in progress and may contain bugs or may not work as expected any pull requests are welcome.
