@@ -20,32 +20,47 @@ Documentation can be found in the `docs` directory.
 
 This [flashforge](https://github.com/FlashforgeOfficial/AD5M_Series_Klipper) is similar to the Anycubic Kobra 2 Series. So we need to investigate it.
 
-### Usage
+## Usage
 
-#### NOTE!!!
+### NOTE!!!
 
-Please backup all files in `/user` so you don't lose access to anycubic cloud and OTA updates. You can use the [EMMC_BACKUP.md](./EMMC_BACKUP.md) guide to backup the whole system.
-
-But backing up `/user` is enough to keep access to anycubic cloud and OTA updates.
-
-Everything you do is on you. I'm not responsible for any damage you do to your printer.
+Please backup all files in `/user` so you don't lose access to anycubic cloud and OTA updates. You can use the [EMMC_BACKUP.md](./EMMC_BACKUP.md) guide to backup the whole system. But backing up `/user` is enough to keep access to anycubic cloud and OTA updates.
 
 You could use `dd` command to backup also.
 
-1. Clone the repository.
+#### Everything you do is on you. I'm not responsible for any damage you do to your printer.
 
-2. Make sure you have uart cable connected and have downgraded to version `2.3.9` so you can continue with the next steps. If not you may not get any uart output at all. To downgrade just put the `2.3.9` version on usb like you always do.
+#### 1. Clone the repository.
 
-3. Place `.bin`, `.zip` or `.swu` firmware files in the `FW` directory.
-   If you don't have firmware files, you can use the script `fwdl.sh <model> <version>` to download in the folder `FW` the version for the printer model you need. The supported models are `K2Pro`, `K2Plus` and `K2Max`. The version is given in the format `X.Y.Z` like `3.0.9`.
+#### 2. Make sure you have uart cable connected and have downgraded to version `2.3.9` so you can continue with the next steps.
 
-4. Run `unpack.sh <update_file>` to unpack the selected firmware update file. The supported file extensions are `bin`, `zip` and `swu`. The result is in the folder `unpacked`.
+If not you may not get any uart output at all. To downgrade just put the `2.3.9` version on usb like you always do.
 
-5. Modify the options file `options.cfg` to select the options you need and run `patch.sh` to patch the firmware files in the `unpacked` folder. The result is still in the folder `unpacked`. You may manually modify the current state of the files if needed. You can also prepare different configuration files for different needs based on the default file `options.cfg`. The custom configuration file is provided as parameter: `patch.sh <custom_configuration_file>`. If no parameter is provided, the file `options.cfg` will be used.
+#### 3. Place the `.bin .zip .swu` firmware files in the `FW` directory.
 
-6. Run `pack.sh` to pack the firmware files from the folder `unpacked`. The result is the file `update/update.swu`. At the end, if you selected `ssh` and `root_access` with a password, you will be asked if you want to upload the update automatically through ssh. If your printer has already a custom update (with ssh and root password) you can type `y` and press `enter`. The update will be transferred to the printer, executed and the printer will reboot. Otherwise, press enter to exit and follow the next step for USB update.
+If you don't have firmware files, you can use the script `fwdl.sh <model> <version>` to download in the folder `FW` the version for the printer model you need. The supported models are `K2Pro`, `K2Plus` and `K2Max`. The version is given in the format `X.Y.Z` like `3.0.9`.
 
-7. If your printer is still with the original firmware, you have to make root access first. Then replace the `/etc/swupdate_public.pem` in the printer with the one from the `RESOURCES` directory or create your own (make a copy first of the original `/etc/swupdate_public.pem` key in case you want to return to the original `ota` updates). Then apply the newly generated custom software `update/update.swu` by USB update (place the file `update.swu` in the folder `update` on the root of a FAT32 formatted USB disk). If your printer already has custom update installed, then you can directly apply the new update by USB update.
+#### 4. Run `unpack.sh <update_file>` to unpack the selected firmware update file.
+
+The supported file extensions are `bin`, `zip` and `swu`. The result is in the folder `unpacked`.
+
+#### 5. Modify the options file `options.cfg`.
+
+To select the options you need and run `patch.sh` to patch the firmware files in the `unpacked` folder. 
+
+The result is still in the folder `unpacked`. You may manually modify the current state of the files if needed. You can also prepare different configuration files for different needs based on the default file `options.cfg`. The custom configuration file is provided as parameter: `patch.sh <custom_configuration_file>`. If no parameter is provided, the file `options.cfg` will be used.
+
+#### 6. Run `pack.sh` to pack the firmware files from the folder `unpacked`. 
+
+The result is the file `update/update.swu`.
+
+At the end, if you selected `ssh` and `root_access` with a password, you will be asked if you want to upload the update automatically through ssh. If your printer has already a custom update (with ssh and root password) you can type `y` and press `enter`. The update will be transferred to the printer, executed and the printer will reboot. Otherwise, press enter to exit and follow the next step for USB update.
+
+#### 7. If your printer is still with the original firmware, you have to make root access first.
+
+Then replace the `/etc/swupdate_public.pem` in the printer with the one from the `RESOURCES` directory or create your own (make a copy first of the original `/etc/swupdate_public.pem` key in case you want to return to the original `ota` updates).
+
+Then apply the newly generated custom software `update/update.swu` by USB update (place the file `update.swu` in the folder `update` on the root of a FAT32 formatted USB disk). If your printer already has custom update installed, then you can directly apply the new update by USB update.
 
 ### Notes
 
