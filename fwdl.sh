@@ -28,7 +28,7 @@ if [ "$par_versions" = "latest" ] || [ "$par_versions" = "LATEST" ] || [ "$par_v
 fi
 
 if [ "$par_versions" = "all" ] || [ "$par_versions" = "ALL" ]; then
-  par_versions="2.3.9 3.0.3 3.0.5 3.0.9 3.1.0"
+  par_versions="2.3.9 3.0.3 3.0.5 3.0.9 3.1.0 3.1.2"
 fi
 
 if [ "$par_versions" = "scan" ] || [ "$par_versions" = "SCAN" ]; then
@@ -76,7 +76,7 @@ for par_model in $par_models; do
     echo -e "${YELLOW}Processing model $par_model version $par_version ...${NC}"
     ver_int=${par_version//./}
     if [ "$ver_int" -le 309 ]; then
-      # old url format
+      # old url format up to 3.0.9
       url_bin="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/AC104_${par_model}_1.1.0_${par_version}_update.bin"
       file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
       rm -f "$file_bin"
@@ -104,32 +104,59 @@ for par_model in $par_models; do
         fi
       fi
     else
-      # new url format
-      par_model_str="k2PRO"
-      par_model_id="20021"
-      if [ "$par_model" = "K2Plus" ]; then
-        par_model_str="k2PLUS"
-        par_model_id="20022"
-      fi
-      if [ "$par_model" = "K2Max" ]; then
-        par_model_str="k2MAX"
-        par_model_id="20023"
-      fi
-      url_bin="https://cdn.cloud-universe.anycubic.com/ota/prod/${par_model_id}/AC104_${par_model_str}_V${par_version}.bin"
-      file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
-      rm -f "$file_bin"
-      curl "$url_bin" --output "$file_bin"
-      result=$(grep "<Code>NoSuchKey</Code>" "$file_bin")
-      file_size=$(wc -c "$file_bin" | awk '{print $1}')
-      if [ -n "$result" ] || [ "$file_size" -le 1000000 ]; then
+      if [ "$ver_int" -le 311 ]; then
+        # url format 3.1.0
+        par_model_str="k2PRO"
+        par_model_id="20021"
+        if [ "$par_model" = "K2Plus" ]; then
+          par_model_str="k2PLUS"
+          par_model_id="20022"
+        fi
+        if [ "$par_model" = "K2Max" ]; then
+          par_model_str="k2MAX"
+          par_model_id="20023"
+        fi
+        url_bin="https://cdn.cloud-universe.anycubic.com/ota/prod/${par_model_id}/AC104_${par_model_str}_V${par_version}.bin"
+        file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
         rm -f "$file_bin"
-        # no bin update available
-        echo -e "${RED}ERROR: Cannot find an update for this model and version ${NC}"
-        if [ $stop_after_error -eq 1 ]; then
-          exit 4
+        curl "$url_bin" --output "$file_bin"
+        result=$(grep "<Code>NoSuchKey</Code>" "$file_bin")
+        file_size=$(wc -c "$file_bin" | awk '{print $1}')
+        if [ -n "$result" ] || [ "$file_size" -le 1000000 ]; then
+          rm -f "$file_bin"
+          # no bin update available
+          echo -e "${RED}ERROR: Cannot find an update for this model and version ${NC}"
+          if [ $stop_after_error -eq 1 ]; then
+            exit 4
+          fi
+        else
+          downloaded=$((downloaded + 1))
         fi
       else
-        downloaded=$((downloaded + 1))
+        # url format 3.1.2+
+        par_model_str="k2+Pro"
+        if [ "$par_model" = "K2Plus" ]; then
+          par_model_str="k2+Plus"
+        fi
+        if [ "$par_model" = "K2Max" ]; then
+          par_model_str="k2+Max"
+        fi
+        url_bin="https://cdn.cloud-universe.anycubic.com/ota/${par_model}/ChituUpgrade_${par_model_str}_V${par_version}.bin"
+        file_bin="FW/AC104_${par_model}_1.1.0_${par_version}_update.bin"
+        rm -f "$file_bin"
+        curl "$url_bin" --output "$file_bin"
+        result=$(grep "<Code>NoSuchKey</Code>" "$file_bin")
+        file_size=$(wc -c "$file_bin" | awk '{print $1}')
+        if [ -n "$result" ] || [ "$file_size" -le 1000000 ]; then
+          rm -f "$file_bin"
+          # no bin update available
+          echo -e "${RED}ERROR: Cannot find an update for this model and version ${NC}"
+          if [ $stop_after_error -eq 1 ]; then
+            exit 4
+          fi
+        else
+          downloaded=$((downloaded + 1))
+        fi
       fi
     fi
   done
