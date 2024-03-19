@@ -37,7 +37,8 @@ options=$(awk -F '=' '{if (! ($0 ~ /^;/) && ! ($0 ~ /^#/) && ! ($0 ~ /^$/) && ! 
 for option in $options; do
 
   # skip the options build_input & build_output that are used only in build.sh
-  if [ "$option" = "build_input" ] || [ "$option" = "build_output" ]; then
+  # skip the option auto_install that is used only in pack.sh
+  if [ "$option" = "build_input" ] || [ "$option" = "build_output" ] || [ "$option" = "auto_install" ]; then
     continue
   fi
 
