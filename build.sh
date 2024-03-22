@@ -106,6 +106,7 @@ fi
 # check the config file for build_input and build_output options
 build_input=""
 build_output=""
+auto_install_tool=""
 if [ -f "$selected_config_file" ]; then
 
     # parse the enabled options that have a set value
@@ -125,6 +126,9 @@ if [ -f "$selected_config_file" ]; then
         fi
         if [ "$option" = "build_output" ]; then
             build_output="$parameter"
+        fi
+        if [ "$option" = "auto_install" ]; then
+            auto_install_tool="$parameter"
         fi
     done
 fi
@@ -231,6 +235,20 @@ if [ -n "$build_output" ]; then
     /bin/cp -f "$project_root/update.bin" "$build_output"
     rm -f "$project_root/update.zip"
     rm -f "$project_root/update.bin"
+fi
+
+# use the auto install tool if present
+if [ -f "$auto_install_tool" ]; then
+    # Ask if the user wants to attempt to auto install the update now. If yes then run the auto install script
+    read -r -p "Do you want to attempt to auto install the update? [y/N] " response
+    if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+        # Run the auto update tool
+        if [[ "$auto_install_tool" == *.py ]]; then
+            python3 "$auto_install_tool"
+        else
+            "$auto_install_tool"
+        fi
+    fi
 fi
 
 echo
