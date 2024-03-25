@@ -39,7 +39,7 @@ fatload usb 0:1 42000000 restore.scr
 For a system restore replace the above script name `restore.scr` with the name `srestore.scr`.
 
 4. Remove the USB disk with the scripts and insert the 8GB USB disk with the complete backup (or the 1GB USB disk with the system backup).
-5. ONLY IN CASE YOU DONT' HAVE A backups on a USB disk you can create them from the backup files on a Linux machine, otherwise skip this step.
+5. ONLY IN CASE YOU DONT' HAVE A backups on a USB disk you can create them from the backup files on a Linux machine, otherwise go step 5.
 
 ```sh
 dd if=emmc_backup.bin of=/dev/sdh  bs=512 count=15269888 status=progress
