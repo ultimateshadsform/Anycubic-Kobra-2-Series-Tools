@@ -41,13 +41,13 @@ For a system restore replace the above script name `restore.scr` with the name `
 4. Remove the USB disk with the scripts and insert the 8GB USB disk with the complete backup (or the 1GB USB disk with the system backup). In case you don't keep the backups on a USB disk you can create them from the backup files on a Linux machine:
 
 ```sh
-dd of=emmc_backup.bin of=/dev/sdh  bs=512 count=15269888 status=progress
+dd if=emmc_backup.bin of=/dev/sdh  bs=512 count=15269888 status=progress
 ```
 
 or in case of system backup:
 
 ```sh
-dd of=emmc_system_backup.bin of=/dev/sdh  bs=512 count=1135648 status=progress
+dd if=emmc_system_backup.bin of=/dev/sdh  bs=512 count=1135648 status=progress
 ```
 
 Note: replace the `/dev/sdh` with the device name of your USB disk.
