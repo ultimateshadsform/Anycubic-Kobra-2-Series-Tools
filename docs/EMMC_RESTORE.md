@@ -42,13 +42,13 @@ For a system restore replace the above script name `restore.scr` with the name `
 5. ONLY IN CASE YOU DONT' HAVE A backups on a USB disk you can create them from the backup files on a Linux machine, otherwise go step 5.
 
 ```sh
-dd if=emmc_backup.bin of=/dev/sdh  bs=512 count=15269888 status=progress
+dd of=emmc_backup.bin of=/dev/sdh  bs=512 count=15269888 status=progress
 ```
 
 or in case of system backup:
 
 ```sh
-dd if=emmc_system_backup.bin of=/dev/sdh  bs=512 count=1135648 status=progress
+dd of=emmc_system_backup.bin of=/dev/sdh  bs=512 count=1135648 status=progress
 ```
 
 Note: replace the `/dev/sdh` with the device name of your USB disk.
