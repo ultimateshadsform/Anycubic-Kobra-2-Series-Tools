@@ -1,10 +1,12 @@
 # EMMC Restore Procedure
 
-This procedure can be performed when you already have a good backup and your printer is not working properly or even cannot boot. Another use case is to fast switch to another printer setup by replacing the system partitions or the entire eMMC with the content from another setup. The procedure uses the uboot functionality to read/write the eMMC and to read/write USB disks. The restore procedure recovers the entire eMMC (or just the system partitions) from a USB disk backup.
+This procedure can be performed when you already have a good backup and your printer is not working properly or even cannot boot. Another use case is to fast switch to another printer setup by replacing the system partitions or the entire eMMC with the content from another setup. The procedure uses the uboot functionality to read/write the eMMC and to read/write USB disks. The restore procedure recovers the entire eMMC from a USB disk backup.
 
-To perform a restore follow these steps according to the current printer working state (A/ or B/):
+To perform a restore follow these steps according to the current printer working state (Case A, B or C):
 
-A/ In case your printer is in good working conditions (it can somehow boot) and you are using firmware version that has uboot enabled.
+## Case A
+
+In case your printer is in good working conditions (it can somehow boot) and you are using firmware version that has uboot enabled.
 
 1. Turn on the printer and stop the booting process by holding key 's'
 2. Insert a USB disk (FAT32 formatted) with the file [restore.scr](../extra-stuff/emmc/restore.scr) on it for complete emmc restore. If you need to restore just the system partitions use the file [srestore.scr](../extra-stuff/emmc/srestore.scr) instead.
@@ -38,29 +40,22 @@ fatload usb 0:1 42000000 restore.scr
 
 For a system restore replace the above script name `restore.scr` with the name `srestore.scr`.
 
-4. Remove the USB disk with the scripts and insert the 8GB USB disk with the complete backup (or the 1GB USB disk with the system backup).
+4. Remove the USB disk with the scripts and insert the 8GB USB disk with the complete backup.
 5. ONLY IN CASE YOU DONT' HAVE A backups on a USB disk you can create them from the backup files on a Linux machine, otherwise go step 5.
 
 ```sh
-dd of=emmc_backup.bin of=/dev/sdh  bs=512 count=15269888 status=progress
-```
-
-or in case of system backup:
-
-```sh
-dd of=emmc_system_backup.bin of=/dev/sdh  bs=512 count=1135648 status=progress
+dd if=emmc_backup.bin of=/dev/sdh  bs=512 count=15269888 status=progress
 ```
 
 Note: replace the `/dev/sdh` with the device name of your USB disk.
 
-
-5. Type the following to execute the script:
+1. Type the following to execute the script:
 
 ```sh
 source 42000000
 ```
 
-6. Wait about 15 minutes (or about 2 minutes for a system backup) and the entire emmc (or the system part of it) will be restored 1:1 from the USB disk
+1. Wait about 15 minutes and the entire emmc will be restored 1:1 from the USB disk sector by sector
    If you see an error and the script stopped before showing 100%, insert another type USB disk and enter again:
 
 ```sh
@@ -69,9 +64,9 @@ source 42000000
 
 7. Reset the printer or power off / power on and you should have a fully working machine like at the time the backup was taken.
 
----
+## Case B
 
-B/ With the xfel tool in case your printer cannot boot at all or you are using a firmware version that disable the UART and you don't have access to the uboot shell.
+With the standard or the custom xfel tool in case your printer cannot boot or you are using a firmware version that disable the UART and you don't have access to the uboot shell.
 
 To boot into uboot shell:
 
@@ -98,8 +93,22 @@ You can modify the script and create new restore.scr image by:
 mkimage -T script -n 'EMMC Restore' -d restore.txt restore.scr
 ```
 
-or for the system restore:
+## Case C
 
-```sh
-mkimage -T script -n 'EMMC System Restore' -d srestore.txt srestore.scr
+In case when after trying to use case B, you cannot enter in the uboot console for any reason (including the uart has some hardware issues).
+Your printer should be in FEL mode. If not, try to enter in FEL mode as described in the document for FEL mode.
+
+- Connect the printer left USB slot (with the camera icon) to the computer with male to male USB cable (1:1 pin connection)
+- Execute this command to verify if the printer is in FEL mode
+
 ```
+xfel extra sdmmc detect
+```
+
+- If you don't receive error executing the above command, start restoring the entire eMMC by:
+
+```
+xfel extra sdmmc write 0 backup.bin
+```
+
+NOTE: Replace `backup.bin` by the filename of your backup file
