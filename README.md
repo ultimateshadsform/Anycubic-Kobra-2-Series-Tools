@@ -6,6 +6,7 @@ This repository contains tools for the Anycubic Kobra 2 Series 3D printers.
 
 Documentation can be found in the `docs` directory.
 
+- [LINKS.md](docs/LINKS.md) - Useful things/addons for the printer.
 - [OPTIONS.md](docs/OPTIONS.md) - Options for the firmware.
 - [GCODE_COMMANDS.md](docs/GCODE_COMMANDS.md) - GCODE commands.
 - [MQTT_API.md](docs/MQTT_API.md) - MQTT API.
