@@ -19,27 +19,31 @@ Documentation can be found in the `docs` directory.
 - [OLD_INFO.md](docs/OLD_INFO.md) - Old information.
 - [CREDITS.md](docs/CREDITS.md) - Credits.
 
-This [flashforge](https://github.com/FlashforgeOfficial/AD5M_Series_Klipper) is similar to the Anycubic Kobra 2 Series. So we need to investigate it.
-
 ## Usage
 
-### NOTE!!!
+> [!IMPORTANT]
+> Please backup all files in `/user` so you don't lose access to anycubic cloud and OTA updates. You can use the [EMMC_BACKUP.md](./EMMC_BACKUP.md) guide to backup the whole system. But backing up `/user` is enough to keep access to anycubic cloud and OTA updates.
+>
+> You could use `dd` command to backup also.
 
-Please backup all files in `/user` so you don't lose access to anycubic cloud and OTA updates. You can use the [EMMC_BACKUP.md](./EMMC_BACKUP.md) guide to backup the whole system. But backing up `/user` is enough to keep access to anycubic cloud and OTA updates.
+> [!CAUTION] **IF YOU DO NOT BACKUP OR DELETE THE FILES IN `/user` YOU WILL LOSE ACCESS TO ANYCUBIC CLOUD AND OTA UPDATES. YOU HAVE BEEN WARNED.**
+>
+> Everything you do is on **your** own risk. I am **not** responsible for any damage you do to your printer.
 
-You could use `dd` command to backup also.
-
-#### Everything you do is on you. I'm not responsible for any damage you do to your printer.
+> [!IMPORTANT]
+> For python scripts to work you need to have installed `python3` and `pip3` and then install the required packages with `pip3 install -r requirements.txt`.
 
 #### 1. Clone the repository.
 
 #### 2. Make sure you have uart cable connected and have downgraded to version `2.3.9` so you can continue with the next steps.
 
-If not you may not get any uart output at all. To downgrade just put the `2.3.9` version on usb like you always do.
+> [!NOTE]
+> If not you may not get any uart output at all. To downgrade just put the `2.3.9` version on usb like you always do.
 
 #### 3. Place the `.bin .zip .swu` firmware files in the `FW` directory.
 
-If you don't have firmware files, you can use the script `fwdl.sh <model> <version>` to download in the folder `FW` the version for the printer model you need. The supported models are `K2Pro`, `K2Plus` and `K2Max`. The version is given in the format `X.Y.Z` like `3.0.9`.
+> [!TIP]
+> If you don't have firmware files, you can use the script `fwdl.sh <model> <version>` to download in the folder `FW` the version for the printer model you need. The supported models are `K2Pro`, `K2Plus` and `K2Max`. The version is given in the format `X.Y.Z` like `3.0.9`.
 
 #### 4. Run `unpack.sh <update_file>` to unpack the selected firmware update file.
 
@@ -47,11 +51,11 @@ The supported file extensions are `bin`, `zip` and `swu`. The result is in the f
 
 #### 5. Modify the options file `options.cfg`.
 
-To select the options you need and run `patch.sh` to patch the firmware files in the `unpacked` folder. 
+To select the options you need and run `patch.sh` to patch the firmware files in the `unpacked` folder.
 
 The result is still in the folder `unpacked`. You may manually modify the current state of the files if needed. You can also prepare different configuration files for different needs based on the default file `options.cfg`. The custom configuration file is provided as parameter: `patch.sh <custom_configuration_file>`. If no parameter is provided, the file `options.cfg` will be used.
 
-#### 6. Run `pack.sh` to pack the firmware files from the folder `unpacked`. 
+#### 6. Run `pack.sh` to pack the firmware files from the folder `unpacked`.
 
 The result is the file `update/update.swu`.
 
@@ -65,22 +69,25 @@ Then apply the newly generated custom software `update/update.swu` by USB update
 
 To do all this a little easier you can just use `build.sh` and it will run all the steps for you.
 
-### Notes
+> [!WARNING]
+> This repository is a work in progress and may contain bugs or may not work as expected any pull requests are welcome.
 
-This repository is a work in progress and may contain bugs or may not work as expected any pull requests are welcome.
+> [!NOTE]
+> Default password for the root access (custom firmware with UART and SSH) is `toor` but it can be changed in the `options.cfg` file.
 
-Default password for the root access (UART and SSH) is `toor` but it can be changed in the `options.cfg` file.
+> [!IMPORTANT]
+> Start the scripts directly by `./script_name.sh <parameters>` to be started by the requested `bash` shell. Shells like `sh` are not compatible at this time.
 
-Start the scripts directly by `./script_name.sh <parameters>` to be started by the requested `bash` shell. Shells like `sh` are not compatible at this time.
+> [!IMPORTANT]
+> Use only FAT32 formatted USB disk and place the file `update.swu` inside a folder `update` created at the root of the USB disk. You don't have to have a 4 GB usb. It can be 64 or 128 GB or more. You only need to format 1 partition to max 4 GB. Then FAT32 will be available.
 
-Use only FAT32 formatted USB disk and place the file `update.swu` inside a folder `update` created at the root of the USB disk. You don't have to have a 4 GB usb. It can be 64 or 128 GB or more. You only need to format 1 partition to max 4 GB. Then FAT32 will be available.
-
-In order for the auto update upload to work properly, you need to setup in advance the configuration file `auto_install.cfg`. It requires one line of text with the following information:
-`host_ip`,`user_name`,`printer_ip`,`ssh_port`
-Example:
-`192.168.1.234,root,192.168.1.242,22`
-
-Only applies if you have already rooted and installed ssh on the printer.
+> [!TIP]
+> In order for the auto update upload to work properly, you need to setup in advance the configuration file `auto_install.cfg`. It requires one line of text with the following information:
+> `host_ip`,`user_name`,`printer_ip`,`ssh_port`
+> Example:
+> `192.168.1.234,root,192.168.1.242,22`
+>
+> Only applies if you have already rooted and installed ssh on the printer.
 
 ### Information
 
