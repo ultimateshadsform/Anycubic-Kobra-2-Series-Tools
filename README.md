@@ -26,7 +26,8 @@ Documentation can be found in the `docs` directory.
 >
 > You could use `dd` command to backup also.
 
-> [!CAUTION] **IF YOU DO NOT BACKUP OR DELETE THE FILES IN `/user` YOU WILL LOSE ACCESS TO ANYCUBIC CLOUD AND OTA UPDATES. YOU HAVE BEEN WARNED.**
+> [!CAUTION]
+> **IF YOU DO NOT BACKUP OR DELETE THE FILES IN `/user` YOU WILL LOSE ACCESS TO ANYCUBIC CLOUD AND OTA UPDATES. YOU HAVE BEEN WARNED.**
 >
 > Everything you do is on **your** own risk. I am **not** responsible for any damage you do to your printer.
 
